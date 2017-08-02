@@ -34,7 +34,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.669" />
 
-    <View
+    <com.vpaliy.fabexploration.SeparatorView
         android:id="@+id/divider"
         android:layout_width="wrap_content"
         android:layout_height="1dp"

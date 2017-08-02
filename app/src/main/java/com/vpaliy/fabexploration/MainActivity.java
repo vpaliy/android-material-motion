@@ -61,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.seekbar)
     protected SeekBar seekBar;
 
+    @BindView(R.id.divider)
+    protected View divider;
+
     private Animator revealAnimator;
 
     @Override
@@ -88,6 +91,9 @@ public class MainActivity extends AppCompatActivity {
                                 super.onAnimationEnd(animation);
                                 panel.setVisibility(View.GONE);
                                 backAnimation();
+                                divider.animate()
+                                        .setDuration(100)
+                                        .scaleY(1).start();
                                 revealAnimator=ViewAnimationUtils.createCircularReveal(panel, cx, cy, 0, endRadius);
                                 revealAnimator.addListener(new AnimatorListenerAdapter() {
                                     @Override
@@ -152,6 +158,11 @@ public class MainActivity extends AppCompatActivity {
         animatorSet.play(progressAnimator);
         animatorSet.start();
 
+        divider.animate()
+                .setStartDelay(100)
+                .setDuration(300)
+                .scaleY(30).start();
+
         ConstraintLayout.LayoutParams params=ConstraintLayout.LayoutParams.class.cast(actionButton.getLayoutParams());
         params.leftToLeft=ConstraintLayout.LayoutParams.PARENT_ID;
         params.verticalBias+=0.1;
@@ -174,56 +185,5 @@ public class MainActivity extends AppCompatActivity {
         params.leftToLeft=ConstraintLayout.LayoutParams.UNSET;
         params.verticalBias-=0.1;
         actionButton.setLayoutParams(params);
-    }
-
-    @SuppressWarnings("RestrictedApi")
-    private static class ScaleDrawable extends DrawableWrapper{
-
-        private ObjectAnimator animator;
-        private float scaleFactor=1;
-        private Interpolator interpolator;
-
-        public ScaleDrawable(Resources resources, Drawable drawable){
-            super(vectorToBitmapDrawableIfNeeded(resources,drawable));
-        }
-
-        public void setInterpolator(Interpolator interpolator) {
-            this.interpolator = interpolator;
-        }
-
-        @Override
-        public void draw(Canvas canvas) {
-          //  canvas.save();
-          //  canvas.scale(scaleFactor,scaleFactor);
-            super.draw(canvas);
-          //  canvas.restore();
-        }
-
-        public void setScale(float scaleFactor) {
-            this.scaleFactor = scaleFactor;
-            invalidateSelf();
-        }
-
-        public  void scale(float scaleFactor, long mills){
-            if(animator!=null && animator.isStarted()){
-                animator.end();
-            }else if(animator==null){
-                animator=ObjectAnimator.ofFloat(this,"scale",0.5f,1);
-                animator.setInterpolator(interpolator);
-            }
-            //animator.setFloatValues(scaleFactor,1);
-            animator.setDuration(mills).start();
-        }
-
-        private static Drawable vectorToBitmapDrawableIfNeeded(Resources resources, Drawable drawable) {
-            if (drawable instanceof VectorDrawable) {
-                Bitmap b = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                Canvas c = new Canvas(b);
-                drawable.setBounds(0, 0, c.getWidth(), c.getHeight());
-                drawable.draw(c);
-                drawable = new BitmapDrawable(resources, b);
-            }
-            return drawable;
-        }
     }
 }
