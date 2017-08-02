@@ -1,6 +1,7 @@
 <io.codetail.widget.RevealFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:translationZ="2dp"
     android:layout_width="match_parent"
     android:layout_height="150dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -49,9 +50,10 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <SeekBar
+            android:id="@+id/seekbar"
             android:progress="10"
             android:max="100"
-            android:layout_width="0dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             tools:layout_editor_absoluteY="0dp"
             app:layout_constraintRight_toRightOf="parent"

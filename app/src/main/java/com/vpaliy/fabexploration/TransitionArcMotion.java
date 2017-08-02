@@ -41,7 +41,7 @@ public class TransitionArcMotion extends PathMotion {
         float pointY = (float) (midY + curveRadius * Math.sin(angleRadians));
 
         arcPath.moveTo(startX, startY);
-        arcPath.cubicTo(startX,startY,pointX, pointY, endX, endY);
+        arcPath.cubicTo(startX,startY,pointX,pointY, endX, endY);
         return arcPath;
     }
 }
