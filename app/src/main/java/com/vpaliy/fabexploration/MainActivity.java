@@ -6,31 +6,23 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.VectorDrawable;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.graphics.drawable.DrawableWrapper;
 import android.transition.ChangeBounds;
-import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.transition.TransitionSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
+import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import java.util.List;
 import butterknife.BindView;
@@ -40,8 +32,6 @@ import butterknife.OnClick;
 import io.codetail.animation.ViewAnimationUtils;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final String TAG=MainActivity.class.getSimpleName();
 
     @BindView(R.id.fab)
     protected FloatingActionButton actionButton;
@@ -55,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.controls_panel)
     protected ViewGroup panel;
 
-    @BindViews({R.id.track_title,R.id.track_author})
+    @BindViews({R.id.album,R.id.track_author})
     protected List<View> fadeViews;
 
     @BindView(R.id.seekbar)
@@ -63,6 +53,15 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.divider)
     protected View divider;
+
+    @BindView(R.id.bottom_background)
+    protected View bottomBackground;
+
+    @BindView(R.id.track_title)
+    protected TextView trackTitle;
+
+    @BindView(R.id.sound_play)
+    protected ImageView soundPlay;
 
     private Animator revealAnimator;
 
@@ -78,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 int w = panel.getWidth();
                 int h = panel.getHeight();
                 final int endRadius = (int) Math.hypot(w, h);
-                final int cx = panel.getWidth() / 2;
+                final int cx = panel.getWidth() /2;
                 final int cy = panel.getHeight()/2;
                 panel.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -87,6 +86,33 @@ public class MainActivity extends AppCompatActivity {
                         revealAnimator.removeAllListeners();
                         revealAnimator.addListener(new AnimatorListenerAdapter() {
                             @Override
+                            public void onAnimationStart(Animator animation) {
+                                super.onAnimationStart(animation);
+                                actionButton.animate()
+                                        .setDuration(200)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationEnd(animation);
+                                                actionButton.setVisibility(View.VISIBLE);
+                                            }
+                                        })
+                                        .alpha(1).start();
+                                for(final View view:fadeViews) {
+                                    view.animate()
+                                            .alpha(1)
+                                            .setDuration(150)
+                                            .setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationEnd(Animator animation) {
+                                                    super.onAnimationEnd(animation);
+                                                    view.setVisibility(View.VISIBLE);
+                                                }
+                                            });
+                                }
+                            }
+
+                            @Override
                             public void onAnimationEnd(Animator animation) {
                                 super.onAnimationEnd(animation);
                                 panel.setVisibility(View.GONE);
@@ -94,35 +120,63 @@ public class MainActivity extends AppCompatActivity {
                                 divider.animate()
                                         .setDuration(100)
                                         .scaleY(1).start();
-                                revealAnimator=ViewAnimationUtils.createCircularReveal(panel, cx, cy, 0, endRadius);
-                                revealAnimator.addListener(new AnimatorListenerAdapter() {
-                                    @Override
-                                    public void onAnimationStart(Animator animation) {
-                                        panel.setVisibility(View.VISIBLE);
-                                    }
-                                });
+                                bottomBackground.setPivotY(0);
+                                bottomBackground.animate()
+                                        .setDuration(100)
+                                        .scaleY(0).start();
+                                setUpReveal();
                             }
                         });
                         revealAnimator.setDuration(250);
                         revealAnimator.start();
                     }
                 });
-                revealAnimator = ViewAnimationUtils.createCircularReveal(panel, cx, cy, 0, endRadius);
-                revealAnimator.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        panel.setVisibility(View.VISIBLE);
-                       // for(View fadeView:fadeViews) fadeView.setVisibility(View.INVISIBLE);
-                       // actionButton.setVisibility(View.INVISIBLE);
-                    }
-                });
-                revealAnimator.setDuration(250);
-                revealAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                setUpReveal();
                 panel.setVisibility(View.GONE);
             }
         });
 
     }
+
+    private void setUpReveal(){
+        int w = panel.getWidth();
+        int h = panel.getHeight();
+        final int endRadius = (int) Math.hypot(w, h);
+        final int cx = panel.getWidth() /2;
+        final int cy = panel.getHeight()/2;
+        revealAnimator = ViewAnimationUtils.createCircularReveal(panel, cx, cy, 0, endRadius);
+        revealAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                panel.setVisibility(View.VISIBLE);
+                actionButton.animate()
+                        .setDuration(100)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                actionButton.setVisibility(View.INVISIBLE);
+                            }
+                        })
+                        .alpha(0).start();
+                for(final View view:fadeViews){
+                    view.animate()
+                            .alpha(0)
+                            .setDuration(100)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    view.setVisibility(View.INVISIBLE);
+                                }
+                            });
+                }
+            }
+        });
+        revealAnimator.setDuration(250);
+        revealAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+    }
+
 
     @OnClick(R.id.fab)
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -134,18 +188,24 @@ public class MainActivity extends AppCompatActivity {
         changeBounds.setDuration(200);
         changeBounds.addTarget(actionButton);
         changeBounds.setInterpolator(new AccelerateDecelerateInterpolator());
-        TransitionSet set=new TransitionSet();
-        set.addTransition(changeBounds);
-        set.addListener(new TransitionAdapterListener(){
-            @Override
-            public void onTransitionEnd(Transition transition) {
-                super.onTransitionStart(transition);
-             //   revealAnimator.start();
+        TransitionManager.beginDelayedTransition(parent,changeBounds);
 
-            }
-        });
-        TransitionManager.beginDelayedTransition(parent,set);
+        //reveal and animate the thumb
+        runRevealNProgress();
+        //stretch out the top divider
+        runTopDividerScale();
+        //expand the bottom divider
+        runBottomDividerScale();
+        //scale icon, swap icon, scale icon
+        runIconScale();
 
+        ConstraintLayout.LayoutParams params=ConstraintLayout.LayoutParams.class.cast(actionButton.getLayoutParams());
+        params.leftToLeft=ConstraintLayout.LayoutParams.PARENT_ID;
+        params.verticalBias+=0.1;
+        actionButton.setLayoutParams(params);
+    }
+
+    private void runRevealNProgress(){
         revealAnimator.setStartDelay(100);
         revealAnimator.setDuration(250);
         seekBar.setProgress(30);
@@ -157,16 +217,39 @@ public class MainActivity extends AppCompatActivity {
         animatorSet.play(revealAnimator);
         animatorSet.play(progressAnimator);
         animatorSet.start();
+    }
 
+    private void runIconScale(){
+        soundPlay.animate()
+                .scaleY(0)
+                .scaleX(0)
+                .setDuration(20)
+                .setStartDelay(100)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        trackTitle.setTextColor(Color.WHITE);
+                        soundPlay.setImageDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.ic_play_bottom));
+                        soundPlay.animate().scaleX(1).scaleY(1)
+                                .setDuration(150).setListener(null).start();
+                    }
+                }).start();
+    }
+
+    private void runBottomDividerScale(){
+        bottomBackground.setPivotY(0);
+        bottomBackground.animate()
+                .setStartDelay(100)
+                .setDuration(300)
+                .scaleY(100).start();
+    }
+
+    private void runTopDividerScale(){
         divider.animate()
                 .setStartDelay(100)
                 .setDuration(300)
                 .scaleY(30).start();
-
-        ConstraintLayout.LayoutParams params=ConstraintLayout.LayoutParams.class.cast(actionButton.getLayoutParams());
-        params.leftToLeft=ConstraintLayout.LayoutParams.PARENT_ID;
-        params.verticalBias+=0.1;
-        actionButton.setLayoutParams(params);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -178,9 +261,7 @@ public class MainActivity extends AppCompatActivity {
         changeBounds.setDuration(200);
         changeBounds.addTarget(actionButton);
         changeBounds.setInterpolator(new AccelerateDecelerateInterpolator());
-        TransitionSet set=new TransitionSet();
-        set.addTransition(changeBounds);
-        TransitionManager.beginDelayedTransition(parent,set);
+        TransitionManager.beginDelayedTransition(parent,changeBounds);
         ConstraintLayout.LayoutParams params=ConstraintLayout.LayoutParams.class.cast(actionButton.getLayoutParams());
         params.leftToLeft=ConstraintLayout.LayoutParams.UNSET;
         params.verticalBias-=0.1;

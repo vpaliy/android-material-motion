@@ -1,9 +1,8 @@
 <io.codetail.widget.RevealFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:translationZ="2dp"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="@dimen/play_panel_size"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout

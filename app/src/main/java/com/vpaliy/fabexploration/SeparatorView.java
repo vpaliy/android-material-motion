@@ -24,7 +24,7 @@ public class SeparatorView extends View {
     private void init(){
         linePaint = new Paint();
         linePaint.setAlpha(50);
-        linePaint.setColor(Color.GRAY);
+        linePaint.setColor(Color.BLACK);
         linePaint.setStrokeWidth(10);
     }
 
