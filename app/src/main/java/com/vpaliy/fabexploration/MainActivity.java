@@ -4,8 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.constraint.ConstraintLayout;
@@ -13,9 +12,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.transition.ChangeBounds;
 import android.transition.TransitionManager;
-import android.transition.TransitionSet;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -27,6 +27,7 @@ import android.widget.TextView;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.BindViews;
+import android.annotation.TargetApi;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.codetail.animation.ViewAnimationUtils;
@@ -63,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.sound_play)
     protected ImageView soundPlay;
 
+    @BindView(R.id.action_bar)
+    protected Toolbar actionBar;
+
     private Animator revealAnimator;
 
     @Override
@@ -70,7 +74,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        seekBar.setProgress(30);
+        setSupportActionBar(actionBar);
+        if(getSupportActionBar()!=null){
+            getSupportActionBar().setTitle(null);
+        }
+        seekBar.setProgress(50);
         panel.post(new Runnable() {
             @Override
             public void run() {
@@ -124,6 +132,21 @@ public class MainActivity extends AppCompatActivity {
                                 bottomBackground.animate()
                                         .setDuration(100)
                                         .scaleY(0).start();
+                                soundPlay.animate().scaleY(0)
+                                        .scaleX(0)
+                                        .setDuration(20)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationEnd(Animator animation) {
+                                                super.onAnimationEnd(animation);
+                                                trackTitle.setTextColor(Color.GRAY);
+                                                soundPlay.setImageDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.ic_volume_bottom));
+                                                soundPlay.animate().scaleX(1)
+                                                        .scaleY(1)
+                                                        .setDuration(75)
+                                                        .setListener(null).start();
+                                            }
+                                        }).start();
                                 setUpReveal();
                             }
                         });
@@ -136,6 +159,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main,menu);
+        return true;
     }
 
     private void setUpReveal(){
@@ -157,8 +186,7 @@ public class MainActivity extends AppCompatActivity {
                                 super.onAnimationEnd(animation);
                                 actionButton.setVisibility(View.INVISIBLE);
                             }
-                        })
-                        .alpha(0).start();
+                        }).alpha(0).start();
                 for(final View view:fadeViews){
                     view.animate()
                             .alpha(0)
@@ -207,9 +235,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void runRevealNProgress(){
         revealAnimator.setStartDelay(100);
-        revealAnimator.setDuration(250);
-        seekBar.setProgress(30);
-        ObjectAnimator progressAnimator=ObjectAnimator.ofInt(seekBar,"progress",30,10);
+        revealAnimator.setDuration(375);
+        revealAnimator.setInterpolator(new DecelerateInterpolator());
+        seekBar.setProgress(50);
+        ObjectAnimator progressAnimator=ObjectAnimator.ofInt(seekBar,"progress",50,20);
         progressAnimator.setInterpolator(new DecelerateInterpolator());
         progressAnimator.setDuration(300);
         progressAnimator.setStartDelay(200);
@@ -231,7 +260,9 @@ public class MainActivity extends AppCompatActivity {
                         super.onAnimationEnd(animation);
                         trackTitle.setTextColor(Color.WHITE);
                         soundPlay.setImageDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.ic_play_bottom));
-                        soundPlay.animate().scaleX(1).scaleY(1)
+                        soundPlay.animate()
+                                .scaleX(1)
+                                .scaleY(1)
                                 .setDuration(150).setListener(null).start();
                     }
                 }).start();
@@ -241,14 +272,14 @@ public class MainActivity extends AppCompatActivity {
         bottomBackground.setPivotY(0);
         bottomBackground.animate()
                 .setStartDelay(100)
-                .setDuration(300)
+                .setDuration(375)
                 .scaleY(100).start();
     }
 
     private void runTopDividerScale(){
         divider.animate()
                 .setStartDelay(100)
-                .setDuration(300)
+                .setDuration(375)
                 .scaleY(30).start();
     }
 

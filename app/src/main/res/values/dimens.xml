@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="play_panel_size">160dp</dimen>
+    <dimen name="icon_toolbar_size">28dp</dimen>
+    <dimen name="seek_bar_width">230dp</dimen>
 </resources>

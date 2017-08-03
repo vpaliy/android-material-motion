@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#009688</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="color_controls">@color/colorPrimary</color>
+    <color name="color_controls">#004e47</color>
+    <color name="color_grey">#016e64</color>
 
 </resources>
