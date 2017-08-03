@@ -2,15 +2,16 @@ package com.vpaliy.fabexploration;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Path;
 import android.os.Build;
-import android.transition.PathMotion;
 import android.util.AttributeSet;
+
+import com.transitionseverywhere.PathMotion;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class TransitionArcMotion extends PathMotion {
     private static int DEFAULT_RADIUS = 500;
+
     private float curveRadius;
 
     public TransitionArcMotion() {

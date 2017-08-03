@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.constraint.ConstraintLayout;
@@ -13,8 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.transition.ChangeBounds;
-import android.transition.TransitionManager;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +20,12 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import java.util.List;
 import butterknife.BindView;
 import butterknife.BindViews;
 import android.annotation.TargetApi;
+import com.transitionseverywhere.ChangeBounds;
+import com.transitionseverywhere.TransitionManager;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.codetail.animation.ViewAnimationUtils;
@@ -207,7 +205,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     @OnClick(R.id.fab)
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void onButtonClick(){
         TransitionArcMotion arcMotion=new TransitionArcMotion();
         ChangeBounds changeBounds=new ChangeBounds();
@@ -217,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
         changeBounds.addTarget(actionButton);
         changeBounds.setInterpolator(new AccelerateDecelerateInterpolator());
         TransitionManager.beginDelayedTransition(parent,changeBounds);
+
 
         //reveal and animate the thumb
         runRevealNProgress();
@@ -241,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         ObjectAnimator progressAnimator=ObjectAnimator.ofInt(seekBar,"progress",50,20);
         progressAnimator.setInterpolator(new DecelerateInterpolator());
         progressAnimator.setDuration(300);
-        progressAnimator.setStartDelay(200);
+        progressAnimator.setStartDelay(100);
         AnimatorSet animatorSet=new AnimatorSet();
         animatorSet.play(revealAnimator);
         animatorSet.play(progressAnimator);
@@ -283,7 +281,6 @@ public class MainActivity extends AppCompatActivity {
                 .scaleY(30).start();
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void backAnimation(){
         TransitionArcMotion arcMotion=new TransitionArcMotion();
         ChangeBounds changeBounds=new ChangeBounds();
