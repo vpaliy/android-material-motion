@@ -177,8 +177,9 @@ public class MainActivity extends AppCompatActivity {
         int w = panel.getWidth();
         int h = panel.getHeight();
         final int endRadius = (int) Math.hypot(w, h);
-        final int cx = panel.getWidth() /2+panel.getWidth()/5;
-        final int cy = panel.getHeight()/2-panel.getHeight()/5;
+        final float offsetY=(actionButton.getY()+actionButton.getHeight()/2)-divider.getTop();
+        final int cx = (int)(actionButton.getX());
+        final int cy = (int)(offsetY);
         revealAnimator = ViewAnimationUtils.createCircularReveal(panel, cx, cy, actionButton.getHeight()/2, endRadius);
         revealAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -187,26 +188,13 @@ public class MainActivity extends AppCompatActivity {
                 actionButton.setVisibility(View.INVISIBLE);
                 playPause.setTranslationX(deltaX(playPause));
                 playPause.setTranslationY(deltaY(playPause));
-                next.setTranslationX(deltaX(next)+150);
-                next.setTranslationY(deltaY(next));
-                prev.setTranslationY(deltaY(prev));
-                prev.setTranslationX(deltaX(prev)-150);
 
                 playPause.animate()
                         .setDuration(animation.getDuration()/3)
                         .setInterpolator(animation.getInterpolator())
                         .translationX(0).translationY(0)
                         .start();
-                next.animate()
-                        .setDuration(animation.getDuration()/3)
-                        .setInterpolator(animation.getInterpolator())
-                        .translationX(0).translationY(0)
-                        .start();
-                prev.animate()
-                        .setDuration(animation.getDuration()/3)
-                        .setInterpolator(animation.getInterpolator())
-                        .translationX(0).translationY(0)
-                        .start();
+
                 fadeInOutViews(0,100);
             }
 
@@ -248,8 +236,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 if(!isFired){
-                    if(animation.getAnimatedFraction()>0.3f){
+                    if(animation.getAnimatedFraction()>0.55f){
                         isFired=true;
+                        setUpReveal();
                         //reveal and animate the thumb
                         runRevealNProgress();
                         //stretch out the top divider
@@ -278,11 +267,13 @@ public class MainActivity extends AppCompatActivity {
         revealAnimator.setInterpolator(new DecelerateInterpolator());
         seekBar.setProgress(50);
         ObjectAnimator progressAnimator=ObjectAnimator.ofInt(seekBar,"progress",50,20);
+        ObjectAnimator scaleY=ObjectAnimator.ofFloat(seekBar,View.SCALE_Y,0,1f);
         progressAnimator.setInterpolator(new DecelerateInterpolator());
         progressAnimator.setDuration(300);
+        scaleY.setDuration(300);
         AnimatorSet animatorSet=new AnimatorSet();
         animatorSet.play(revealAnimator);
-        animatorSet.play(progressAnimator);
+        animatorSet.play(progressAnimator).with(scaleY);
         animatorSet.start();
     }
 
