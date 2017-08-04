@@ -28,20 +28,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_pause"
-        android:layout_marginEnd="16dp"
-        app:backgroundTint="@color/colorPrimaryDark"
-        app:fabSize="normal"
-        android:layout_marginRight="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.669" />
-
     <com.vpaliy.fabexploration.SeparatorView
         android:id="@+id/divider"
         android:layout_width="wrap_content"
@@ -88,6 +74,21 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/bottom_background"
         app:layout_constraintTop_toBottomOf="@+id/divider"/>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_play"
+        android:layout_marginEnd="16dp"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:fabSize="normal"
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.669" />
 
     <TextView
         android:id="@+id/album"

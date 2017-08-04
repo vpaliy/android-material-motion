@@ -1,7 +1,7 @@
 <io.codetail.widget.RevealFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:translationZ="12dp"
+    android:id="@+id/controls"
     android:layout_width="match_parent"
     android:layout_height="@dimen/play_panel_size"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -53,7 +53,7 @@
 
         <SeekBar
             android:id="@+id/seekbar"
-            android:progress="10"
+            android:progress="50"
             android:max="100"
             android:progressDrawable="@drawable/empty"
             android:thumb="@drawable/shape_thumb"
