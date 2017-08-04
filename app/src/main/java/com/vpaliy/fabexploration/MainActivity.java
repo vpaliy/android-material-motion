@@ -115,14 +115,14 @@ public class MainActivity extends AppCompatActivity {
             final int cy = panel.getHeight()/2;
             panel.setOnClickListener(v->{
                 setUpPlayDrawable();
-                revealAnimator=ViewAnimationUtils.createCircularReveal(panel, cx, cy, endRadius,0);
+                revealAnimator=ViewAnimationUtils.createCircularReveal(panel, cx, cy, endRadius,actionButton.getHeight()/2);
                 revealAnimator.removeAllListeners();
                 revealAnimator.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animation) {
                         super.onAnimationStart(animation);
                         actionButton.animate()
-                                .setDuration(200)
+                                .setDuration(50)
                                 .setListener(new AnimatorListenerAdapter() {
                                     @Override
                                     public void onAnimationStart(Animator animation) {
@@ -138,6 +138,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         panel.setVisibility(View.GONE);
+                        actionButton.setScaleX(2f);
+                        actionButton.setScaleY(2f);
                         backAnimation();
                         divider.animate()
                                 .setDuration(100)
@@ -151,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                         setUpReveal();
                     }
                 });
-                revealAnimator.setDuration(250);
+                revealAnimator.setDuration(150);
                 revealAnimator.start();
             });
             setUpReveal();
@@ -191,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
                 playPause.animate()
                         .setDuration(animation.getDuration()/3)
-                        .setInterpolator(animation.getInterpolator())
+                        .setInterpolator(new AccelerateDecelerateInterpolator())
                         .translationX(0).translationY(0)
                         .start();
 
@@ -307,7 +309,8 @@ public class MainActivity extends AppCompatActivity {
                         soundPlay.animate()
                                 .scaleX(1)
                                 .scaleY(1)
-                                .setDuration(150).setListener(null).start();
+                                .setDuration(150)
+                                .setListener(null).start();
                     }
                 }).start();
     }
@@ -330,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
         ChangeBounds changeBounds=new ChangeBounds();
         changeBounds.setPathMotion(arcMotion);
         arcMotion.setCurveRadius(-background.getHeight()/2);
-        changeBounds.setDuration(200);
+        changeBounds.setDuration(100);
         changeBounds.addTarget(actionButton);
         changeBounds.setInterpolator(new AccelerateDecelerateInterpolator());
         TransitionManager.beginDelayedTransition(parent,changeBounds);
