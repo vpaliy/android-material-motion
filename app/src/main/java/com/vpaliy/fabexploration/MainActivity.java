@@ -4,9 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Path;
+import android.graphics.PathMeasure;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
@@ -14,15 +17,21 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Property;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -31,6 +40,8 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import com.transitionseverywhere.ChangeBounds;
 import com.transitionseverywhere.TransitionManager;
+import com.transitionseverywhere.TransitionSet;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.codetail.animation.ViewAnimationUtils;
@@ -108,21 +119,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpPanel(){
         panel.post(()->{
-            int w = panel.getWidth();
-            int h = panel.getHeight();
-            final int endRadius = (int) Math.hypot(w, h);
-            final int cx = panel.getWidth() /2;
-            final int cy = panel.getHeight()/2;
             panel.setOnClickListener(v->{
+                int w = panel.getWidth();
+                int h = panel.getHeight();
+                final int endRadius = (int) Math.hypot(w, h);
+                final float offsetY=(actionButton.getY()+actionButton.getHeight()/2)-divider.getTop();
+                final int cx = (int)(actionButton.getX()+actionButton.getWidth()/2);
+                final int cy = (int)(offsetY);
                 setUpPlayDrawable();
-                revealAnimator=ViewAnimationUtils.createCircularReveal(panel, cx, cy, endRadius,actionButton.getHeight()/2);
+                revealAnimator=ViewAnimationUtils.createCircularReveal(panel, cx, cy, endRadius,actionButton.getHeight());
                 revealAnimator.removeAllListeners();
                 revealAnimator.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animation) {
                         super.onAnimationStart(animation);
+                        ViewCompat.setElevation(actionButton,0);
                         actionButton.animate()
-                                .setDuration(50)
+                                .setDuration(150)
                                 .setListener(new AnimatorListenerAdapter() {
                                     @Override
                                     public void onAnimationStart(Animator animation) {
@@ -130,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                                         actionButton.setVisibility(View.VISIBLE);
                                     }
                                 })
+                               // .scaleX(2f).scaleY(2f)
                                 .alpha(1).start();
                         fadeInOutViews(1,150);
                     }
@@ -138,9 +152,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         panel.setVisibility(View.GONE);
-                        actionButton.setScaleX(2f);
-                        actionButton.setScaleY(2f);
-                        backAnimation();
+                        backAnimationHere();
                         divider.animate()
                                 .setDuration(100)
                                 .scaleY(1).start();
@@ -180,9 +192,9 @@ public class MainActivity extends AppCompatActivity {
         int h = panel.getHeight();
         final int endRadius = (int) Math.hypot(w, h);
         final float offsetY=(actionButton.getY()+actionButton.getHeight()/2)-divider.getTop();
-        final int cx = (int)(actionButton.getX());
+        final int cx = (int)(actionButton.getX()+actionButton.getWidth()/2);
         final int cy = (int)(offsetY);
-        revealAnimator = ViewAnimationUtils.createCircularReveal(panel, cx, cy, actionButton.getHeight()/2, endRadius);
+        revealAnimator = ViewAnimationUtils.createCircularReveal(panel, cx, cy, actionButton.getHeight(), endRadius);
         revealAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -228,15 +240,49 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     public void onButtonClick(){
         setUpPauseDrawable();
-        TransitionArcMotion arcMotion=new TransitionArcMotion();
-        SwingTransition swingTransition=new SwingTransition();
-        arcMotion.setCurveRadius(background.getHeight()/2);
-        swingTransition.setPathMotion(arcMotion);
-        swingTransition.setDuration(200);
-        swingTransition.setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            private volatile boolean isFired;
+        float endX=background.getWidth()/2;
+        float endY=background.getHeight()/2+background.getY()-actionButton.getHeight()/2;
+        float startX=0;
+        float startY=0;
+        final float curveRadius=background.getHeight()/2;
+
+        final float offsetX=endX-(actionButton.getX()+actionButton.getWidth()/2);
+        final float offsetY=endY-(actionButton.getY()+actionButton.getHeight()/2);
+
+        endX=offsetX;
+        endY=offsetY;
+
+        Path arcPath = new Path();
+
+        float midX = startX + ((endX - startX) / 2);
+        float midY = startY + ((endY - startY) / 2);
+        float xDiff = midX - startX;
+        float yDiff = midY - startY;
+
+        double angle = (Math.atan2(yDiff, xDiff) * (180 / Math.PI)) - 90;
+        double angleRadians = Math.toRadians(angle);
+
+        float pointX = (float) (midX + curveRadius * Math.cos(angleRadians));
+        float pointY = (float) (midY + curveRadius * Math.sin(angleRadians));
+
+        arcPath.moveTo(0, 0);
+        arcPath.cubicTo(0,0,pointX,pointY, endX, endY);
+
+        ValueAnimator pathAnimator=ValueAnimator.ofFloat(0,1);
+        pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            private float point[]=new float[2];
+            private boolean isFired;
+            private PathMeasure pathMeasure = new PathMeasure(arcPath, false);
+
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
+                final float value=animation.getAnimatedFraction();
+                // Gets the point at the fractional path length
+                pathMeasure.getPosTan(pathMeasure.getLength() * value, point, null);
+
+                // Sets view location to the above point
+                actionButton.setTranslationX(point[0]);
+                actionButton.setTranslationY(point[1]);
                 if(!isFired){
                     if(animation.getAnimatedFraction()>0.55f){
                         isFired=true;
@@ -253,15 +299,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        swingTransition.addTarget(actionButton);
-        swingTransition.setInterpolator(new AccelerateDecelerateInterpolator());
-        TransitionManager.beginDelayedTransition(parent,swingTransition);
-
-
-        ConstraintLayout.LayoutParams params=ConstraintLayout.LayoutParams.class.cast(actionButton.getLayoutParams());
-        params.leftToLeft=ConstraintLayout.LayoutParams.PARENT_ID;
-        params.verticalBias+=0.1;
-        actionButton.setLayoutParams(params);
+        pathAnimator.setInterpolator(new DecelerateInterpolator());
+        pathAnimator.setDuration(300);pathAnimator.start();
     }
 
     private void runRevealNProgress(){
@@ -328,15 +367,65 @@ public class MainActivity extends AppCompatActivity {
                 .scaleY(30).start();
     }
 
+    private void backAnimationHere(){
+        float endX=0;
+        float endY=0;
+        float startX=actionButton.getTranslationX();
+        float startY=actionButton.getTranslationY();
+        final float curveRadius=-background.getHeight()/2;
+
+        Path arcPath = new Path();
+
+        float midX = startX + ((endX - startX) / 2);
+        float midY = startY + ((endY - startY) / 2);
+        float xDiff = midX - startX;
+        float yDiff = midY - startY;
+
+        double angle = (Math.atan2(yDiff, xDiff) * (180 / Math.PI)) - 90;
+        double angleRadians = Math.toRadians(angle);
+
+        float pointX = (float) (midX + curveRadius * Math.cos(angleRadians));
+        float pointY = (float) (midY + curveRadius * Math.sin(angleRadians));
+
+        arcPath.moveTo(startX, startY);
+        arcPath.cubicTo(startX,startY,pointX,pointY, endX, endY);
+
+        ValueAnimator pathAnimator=ValueAnimator.ofFloat(0,1);
+        pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            private float point[]=new float[2];
+            private boolean isFired;
+            private PathMeasure pathMeasure = new PathMeasure(arcPath, false);
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                final float value=animation.getAnimatedFraction();
+                // Gets the point at the fractional path length
+                pathMeasure.getPosTan(pathMeasure.getLength() * value, point, null);
+
+                // Sets view location to the above point
+                actionButton.setTranslationX(point[0]);
+                actionButton.setTranslationY(point[1]);
+            }
+        });
+        pathAnimator.setInterpolator(new DecelerateInterpolator());
+        pathAnimator.setDuration(300);pathAnimator.start();
+    }
+
     private void backAnimation(){
         TransitionArcMotion arcMotion=new TransitionArcMotion();
-        ChangeBounds changeBounds=new ChangeBounds();
-        changeBounds.setPathMotion(arcMotion);
         arcMotion.setCurveRadius(-background.getHeight()/2);
-        changeBounds.setDuration(100);
-        changeBounds.addTarget(actionButton);
-        changeBounds.setInterpolator(new AccelerateDecelerateInterpolator());
-        TransitionManager.beginDelayedTransition(parent,changeBounds);
+        SwingTransition swingTransition=new SwingTransition();
+        swingTransition.addTarget(actionButton);
+        swingTransition.setPathMotion(arcMotion);
+        swingTransition.setDuration(200);
+        ScaleTransition scaleTransition=new ScaleTransition(actionButton.getScaleX(),1f);
+        scaleTransition.setDuration(75);
+        TransitionSet set=new TransitionSet();
+        set.addTransition(swingTransition);
+        set.addTransition(scaleTransition);
+        set.addTarget(actionButton);
+        set.setInterpolator(new DecelerateInterpolator());
+        TransitionManager.beginDelayedTransition(parent,set);
         ConstraintLayout.LayoutParams params=ConstraintLayout.LayoutParams.class.cast(actionButton.getLayoutParams());
         params.leftToLeft=ConstraintLayout.LayoutParams.UNSET;
         params.verticalBias-=0.1;
