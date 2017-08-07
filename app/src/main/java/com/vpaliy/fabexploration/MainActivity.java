@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         int w = panel.getWidth();
         int h = panel.getHeight();
         final int endRadius = (int) Math.hypot(w, h);
-        final float offsetY=(actionButton.getY()+actionButton.getHeight()/2)-divider.getTop();
+        final float offsetY=(actionButton.getY()+actionButton.getHeight()/2)-background.getTop();
         final int cx = (int)(actionButton.getX()+actionButton.getWidth()/2);
         final int cy = (int)(offsetY);
 
@@ -189,6 +189,11 @@ public class MainActivity extends AppCompatActivity {
                 actionButton.setVisibility(View.INVISIBLE);
                // prev.setVisibility(View.INVISIBLE);next.setVisibility(View.INVISIBLE);
 
+                playPause.animate()
+                        .translationX(0)
+                        .translationY(0)
+                        .setDuration(animation.getDuration()/3)
+                        .start();
 
                 fadeInOutViews(0,100);
             }
@@ -267,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
                 actionButton.setTranslationY(point[1]);
 
                 if(!isFired){
-                    if(animation.getAnimatedFraction()>=0.75){
+                    if(animation.getAnimatedFraction()>=0.55){
                         isFired=true;
                         setUpReveal();
                         //reveal and animate the thumb
