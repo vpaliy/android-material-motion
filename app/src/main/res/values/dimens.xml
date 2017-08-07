@@ -3,4 +3,5 @@
     <dimen name="play_panel_size">160dp</dimen>
     <dimen name="icon_toolbar_size">28dp</dimen>
     <dimen name="seek_bar_width">230dp</dimen>
+    <dimen name="play_pause_size">24dp</dimen>
 </resources>

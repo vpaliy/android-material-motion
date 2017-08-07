@@ -4,44 +4,30 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.DrawableRes;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.Property;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.BindViews;
-import com.transitionseverywhere.ChangeBounds;
-import com.transitionseverywhere.TransitionManager;
-import com.transitionseverywhere.TransitionSet;
-
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.codetail.animation.ViewAnimationUtils;
@@ -52,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     //TODO adapt to smaller screens
     //TODO change fonts, maybe colors
     //TODO generalize
+
+    private static final String TAG=MainActivity.class.getSimpleName();
 
     @BindView(R.id.fab)
     protected FloatingActionButton actionButton;
@@ -96,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     protected ImageView prev;
 
     @BindView(R.id.controls)
-    protected View revealContainer;
+    protected RevealFrameLayout revealContainer;
 
     private Animator revealAnimator;
 
@@ -127,48 +115,42 @@ public class MainActivity extends AppCompatActivity {
                 final int cx = (int)(actionButton.getX()+actionButton.getWidth()/2);
                 final int cy = (int)(offsetY);
                 setUpPlayDrawable();
-                revealAnimator=ViewAnimationUtils.createCircularReveal(panel, cx, cy, endRadius,actionButton.getHeight());
+                revealAnimator=ViewAnimationUtils.createCircularReveal(panel, cx, cy, endRadius,actionButton.getHeight()/2);
                 revealAnimator.removeAllListeners();
                 revealAnimator.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animation) {
                         super.onAnimationStart(animation);
                         ViewCompat.setElevation(actionButton,0);
-                        actionButton.animate()
-                                .setDuration(150)
-                                .setListener(new AnimatorListenerAdapter() {
-                                    @Override
-                                    public void onAnimationStart(Animator animation) {
-                                        super.onAnimationEnd(animation);
-                                        actionButton.setVisibility(View.VISIBLE);
-                                    }
-                                })
-                               // .scaleX(2f).scaleY(2f)
-                                .alpha(1).start();
                         fadeInOutViews(1,150);
+                        actionButton.setVisibility(View.VISIBLE);
+                        actionButton.animate()
+                                .alpha(1)
+                                .setDuration(100)
+                                .setListener(null)
+                                .start();
                     }
 
-                    @Override
+                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
-                        panel.setVisibility(View.GONE);
-                        backAnimationHere();
-                        divider.animate()
+                         panel.setVisibility(View.GONE);
+                         backAnimation();
+                         divider.animate()
                                 .setDuration(100)
                                 .scaleY(1).start();
-                        bottomBackground.setPivotY(0);
-                        bottomBackground.animate()
+                         bottomBackground.setPivotY(0);
+                         bottomBackground.animate()
                                 .setDuration(100)
                                 .scaleY(0).start();
-                        runIconScale(0,R.drawable.ic_volume_bottom,
+                         runIconScale(0,R.drawable.ic_volume_bottom,
                                 ContextCompat.getColor(getApplicationContext(),R.color.color_grey));
-                        setUpReveal();
+                         setUpReveal();
                     }
                 });
-                revealAnimator.setDuration(150);
+                revealAnimator.setDuration(100);
                 revealAnimator.start();
             });
-            setUpReveal();
             panel.setVisibility(View.GONE);
         });
     }
@@ -194,20 +176,19 @@ public class MainActivity extends AppCompatActivity {
         final float offsetY=(actionButton.getY()+actionButton.getHeight()/2)-divider.getTop();
         final int cx = (int)(actionButton.getX()+actionButton.getWidth()/2);
         final int cy = (int)(offsetY);
+
+        final float deltaX=cx-(playPause.getLeft()+playPause.getWidth()/2);
+        final float deltaY=(cy-getResources().getDimension(R.dimen.play_pause_size)/2)-(playPause.getTop());
+        playPause.setTranslationX(deltaX);
+        playPause.setTranslationY(deltaY);
         revealAnimator = ViewAnimationUtils.createCircularReveal(panel, cx, cy, actionButton.getHeight(), endRadius);
         revealAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 panel.setVisibility(View.VISIBLE);
                 actionButton.setVisibility(View.INVISIBLE);
-                playPause.setTranslationX(deltaX(playPause));
-                playPause.setTranslationY(deltaY(playPause));
+               // prev.setVisibility(View.INVISIBLE);next.setVisibility(View.INVISIBLE);
 
-                playPause.animate()
-                        .setDuration(animation.getDuration()/3)
-                        .setInterpolator(new AccelerateDecelerateInterpolator())
-                        .translationX(0).translationY(0)
-                        .start();
 
                 fadeInOutViews(0,100);
             }
@@ -240,11 +221,12 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     public void onButtonClick(){
         setUpPauseDrawable();
+        final float playPauseY=playPause.getY()+background.getY();
         float endX=background.getWidth()/2;
-        float endY=background.getHeight()/2+background.getY()-actionButton.getHeight()/2;
+        float endY=playPauseY+playPause.getHeight()/2;
         float startX=0;
         float startY=0;
-        final float curveRadius=background.getHeight()/2;
+        final float curveRadius=background.getHeight()/3;
 
         final float offsetX=endX-(actionButton.getX()+actionButton.getWidth()/2);
         final float offsetY=endY-(actionButton.getY()+actionButton.getHeight()/2);
@@ -271,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
         ValueAnimator pathAnimator=ValueAnimator.ofFloat(0,1);
         pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             private float point[]=new float[2];
-            private boolean isFired;
+            private volatile boolean isFired;
             private PathMeasure pathMeasure = new PathMeasure(arcPath, false);
 
             @Override
@@ -283,8 +265,9 @@ public class MainActivity extends AppCompatActivity {
                 // Sets view location to the above point
                 actionButton.setTranslationX(point[0]);
                 actionButton.setTranslationY(point[1]);
+
                 if(!isFired){
-                    if(animation.getAnimatedFraction()>0.55f){
+                    if(animation.getAnimatedFraction()>=0.75){
                         isFired=true;
                         setUpReveal();
                         //reveal and animate the thumb
@@ -367,7 +350,27 @@ public class MainActivity extends AppCompatActivity {
                 .scaleY(30).start();
     }
 
-    private void backAnimationHere(){
+    private Path createArcPath(View view, float endX, float endY,float radius){
+        Path arcPath=new Path();
+        float startX=view.getTranslationX();
+        float startY=view.getTranslationY();
+        float midX = startX + ((endX - startX) / 2);
+        float midY = startY + ((endY - startY) / 2);
+        float xDiff = midX - startX;
+        float yDiff = midY - startY;
+
+        double angle = (Math.atan2(yDiff, xDiff) * (180 / Math.PI)) - 90;
+        double angleRadians = Math.toRadians(angle);
+
+        float pointX = (float) (midX + radius * Math.cos(angleRadians));
+        float pointY = (float) (midY + radius * Math.sin(angleRadians));
+
+        arcPath.moveTo(startX, startY);
+        arcPath.cubicTo(startX,startY,pointX,pointY, endX, endY);
+        return arcPath;
+    }
+
+    private void backAnimation(){
         float endX=0;
         float endY=0;
         float startX=actionButton.getTranslationX();
@@ -393,7 +396,6 @@ public class MainActivity extends AppCompatActivity {
         ValueAnimator pathAnimator=ValueAnimator.ofFloat(0,1);
         pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             private float point[]=new float[2];
-            private boolean isFired;
             private PathMeasure pathMeasure = new PathMeasure(arcPath, false);
 
             @Override
@@ -409,26 +411,5 @@ public class MainActivity extends AppCompatActivity {
         });
         pathAnimator.setInterpolator(new DecelerateInterpolator());
         pathAnimator.setDuration(300);pathAnimator.start();
-    }
-
-    private void backAnimation(){
-        TransitionArcMotion arcMotion=new TransitionArcMotion();
-        arcMotion.setCurveRadius(-background.getHeight()/2);
-        SwingTransition swingTransition=new SwingTransition();
-        swingTransition.addTarget(actionButton);
-        swingTransition.setPathMotion(arcMotion);
-        swingTransition.setDuration(200);
-        ScaleTransition scaleTransition=new ScaleTransition(actionButton.getScaleX(),1f);
-        scaleTransition.setDuration(75);
-        TransitionSet set=new TransitionSet();
-        set.addTransition(swingTransition);
-        set.addTransition(scaleTransition);
-        set.addTarget(actionButton);
-        set.setInterpolator(new DecelerateInterpolator());
-        TransitionManager.beginDelayedTransition(parent,set);
-        ConstraintLayout.LayoutParams params=ConstraintLayout.LayoutParams.class.cast(actionButton.getLayoutParams());
-        params.leftToLeft=ConstraintLayout.LayoutParams.UNSET;
-        params.verticalBias-=0.1;
-        actionButton.setLayoutParams(params);
     }
 }
