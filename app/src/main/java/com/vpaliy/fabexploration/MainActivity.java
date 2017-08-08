@@ -131,21 +131,21 @@ public class MainActivity extends AppCompatActivity {
                                 .start();
                     }
 
-                     @Override
+                    @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
-                         panel.setVisibility(View.GONE);
-                         backAnimation();
-                         divider.animate()
+                        panel.setVisibility(View.GONE);
+                        backAnimation();
+                        divider.animate()
                                 .setDuration(100)
                                 .scaleY(1).start();
-                         bottomBackground.setPivotY(0);
-                         bottomBackground.animate()
+                        bottomBackground.setPivotY(0);
+                        bottomBackground.animate()
                                 .setDuration(100)
                                 .scaleY(0).start();
-                         runIconScale(0,R.drawable.ic_volume_bottom,
+                        runIconScale(0,R.drawable.ic_volume_bottom,
                                 ContextCompat.getColor(getApplicationContext(),R.color.color_grey));
-                         setUpReveal();
+                        setUpReveal();
                     }
                 });
                 revealAnimator.setDuration(100);
@@ -173,28 +173,21 @@ public class MainActivity extends AppCompatActivity {
         int w = panel.getWidth();
         int h = panel.getHeight();
         final int endRadius = (int) Math.hypot(w, h);
-        final float offsetY=(actionButton.getY()+actionButton.getHeight()/2)-background.getTop();
         final int cx = (int)(actionButton.getX()+actionButton.getWidth()/2);
-        final int cy = (int)(offsetY);
+        final int cy = (int)(actionButton.getY()+actionButton.getHeight()/2-background.getTop());
 
         final float deltaX=cx-(playPause.getLeft()+playPause.getWidth()/2);
         final float deltaY=(cy-getResources().getDimension(R.dimen.play_pause_size)/2)-(playPause.getTop());
         playPause.setTranslationX(deltaX);
         playPause.setTranslationY(deltaY);
         revealAnimator = ViewAnimationUtils.createCircularReveal(panel, cx, cy, actionButton.getHeight(), endRadius);
+
+        //
         revealAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 panel.setVisibility(View.VISIBLE);
                 actionButton.setVisibility(View.INVISIBLE);
-               // prev.setVisibility(View.INVISIBLE);next.setVisibility(View.INVISIBLE);
-
-                playPause.animate()
-                        .translationX(0)
-                        .translationY(0)
-                        .setDuration(animation.getDuration()/3)
-                        .start();
-
                 fadeInOutViews(0,100);
             }
 
@@ -210,6 +203,29 @@ public class MainActivity extends AppCompatActivity {
         revealAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
     }
 
+    private void runButtonAnimation(){
+        next.setVisibility(View.INVISIBLE);prev.setVisibility(View.INVISIBLE);
+        Path arcPath=createArcPath(playPause,0,0,-playPause.getTranslationY());
+        ValueAnimator pathAnimator=ValueAnimator.ofFloat(0,1);
+        pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            private float point[] = new float[2];
+            private PathMeasure pathMeasure = new PathMeasure(arcPath, false);
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                final float value = animation.getAnimatedFraction();
+                // Gets the point at the fractional path length
+                pathMeasure.getPosTan(pathMeasure.getLength() * value, point, null);
+
+                // Sets view location to the above point
+                playPause.setTranslationX(point[0]);
+                playPause.setTranslationY(point[1]);
+            }
+        });
+        pathAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        pathAnimator.setDuration(150);
+        pathAnimator.start();
+    }
 
     private void setUpPauseDrawable(){
         Drawable drawable=ContextCompat.getDrawable(this,R.drawable.ic_pause);
@@ -272,9 +288,10 @@ public class MainActivity extends AppCompatActivity {
                 actionButton.setTranslationY(point[1]);
 
                 if(!isFired){
-                    if(animation.getAnimatedFraction()>=0.55){
+                    if(animation.getAnimatedFraction()>=0.35){
                         isFired=true;
                         setUpReveal();
+                        runButtonAnimation();
                         //reveal and animate the thumb
                         runRevealNProgress();
                         //stretch out the top divider
@@ -292,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void runRevealNProgress(){
-        revealAnimator.setDuration(355);
+        revealAnimator.setDuration(455);
         revealAnimator.setInterpolator(new DecelerateInterpolator());
         seekBar.setProgress(50);
         ObjectAnimator progressAnimator=ObjectAnimator.ofInt(seekBar,"progress",50,20);
