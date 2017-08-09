@@ -9,4 +9,20 @@
     </style>
 
 
+    <style name="Widget">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="Widget.Subtitle">
+        <item name="android:textSize">@dimen/subtitle_size</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawablePadding">@dimen/drawable_padding</item>
+    </style>
+
+    <style name="Widget.MainTitle">
+        <item name="android:textSize">@dimen/main_title_size</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+    </style>
 </resources>

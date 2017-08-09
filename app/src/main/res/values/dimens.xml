@@ -4,4 +4,22 @@
     <dimen name="icon_toolbar_size">28dp</dimen>
     <dimen name="seek_bar_width">230dp</dimen>
     <dimen name="play_pause_size">24dp</dimen>
+
+    <!-- Spacing -->
+    <dimen name="spacing_medium">8dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_big">24dp</dimen>
+    <dimen name="spacing_huge">32dp</dimen>
+    <dimen name="drawable_padding">4dp</dimen>
+    <dimen name="item_bottom_padding">42dp</dimen>
+
+    <!-- Font size -->
+    <dimen name="font_size_medium">16sp</dimen>
+    <dimen name="font_size_big">18sp</dimen>
+
+    <!-- Text -->
+    <dimen name="main_title_size">17sp</dimen>
+    <dimen name="subtitle_size">13sp</dimen>
+    <dimen name="details_main_title_size">24sp</dimen>
+    <dimen name="details_subtitle_size">18sp</dimen>
 </resources>
