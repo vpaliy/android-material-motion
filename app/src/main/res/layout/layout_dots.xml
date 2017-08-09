@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent"
+    android:background="@drawable/morph_background"
+    android:layout_width="match_parent"
+    android:layout_height="150dp">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/first"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/second"
+        app:layout_constraintTop_toTopOf="parent"
+        app:backgroundTint="@color/color_dot_first"
+        app:fabSize="normal"
+        app:layout_constraintHorizontal_chainStyle="spread" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/second"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="normal"
+        app:layout_constraintTop_toTopOf="@+id/first"
+        app:layout_constraintBottom_toBottomOf="@+id/first"
+        app:layout_constraintLeft_toRightOf="@+id/first"
+        app:layout_constraintRight_toLeftOf="@+id/third"
+        app:backgroundTint="@color/color_dot_second" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/third"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/second"
+        app:layout_constraintBottom_toBottomOf="@+id/second"
+        app:layout_constraintLeft_toRightOf="@+id/second"
+        app:layout_constraintVertical_bias="0.0"
+        app:fabSize="normal"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

@@ -6,7 +6,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-
+import com.vpaliy.fabexploration.dots.DotsFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
                     loadFragment(new PlayerFragment());
                     return true;
                 case R.id.dots:
+                    loadFragment(new DotsFragment());
                     return true;
             }
             return false;

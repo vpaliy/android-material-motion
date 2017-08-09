@@ -13,11 +13,9 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -25,18 +23,14 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.BindViews;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import io.codetail.animation.ViewAnimationUtils;
 import io.codetail.widget.RevealFrameLayout;
 
-public class PlayerFragment extends Fragment {
+public class PlayerFragment extends BaseFragment{
 
     @BindView(R.id.fab)
     protected FloatingActionButton actionButton;
@@ -85,22 +79,9 @@ public class PlayerFragment extends Fragment {
 
     private Animator revealAnimator;
 
-    private Unbinder unbinder;
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root=inflater.inflate(R.layout.activity_main,container,false);
-        unbinder=ButterKnife.bind(this,root);
-        return root;
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if(unbinder!=null){
-            unbinder.unbind();
-        }
+    protected int mainRes() {
+        return R.layout.fragment_player;
     }
 
     @Override

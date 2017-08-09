@@ -14,4 +14,6 @@
     <color name="text_secondary_dark">#8a000000</color> <!-- 54% -->
     <color name="colorActionBar">#e57373</color>
 
+    <color name="color_dot_first">#03a9f4</color>
+    <color name="color_dot_second">#ffc107</color>
 </resources>
