@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void runRevealNProgress(){
-        revealAnimator.setDuration(455);
+        revealAnimator.setDuration(500);
         revealAnimator.setInterpolator(new DecelerateInterpolator());
         seekBar.setProgress(50);
         ObjectAnimator progressAnimator=ObjectAnimator.ofInt(seekBar,"progress",50,20);
