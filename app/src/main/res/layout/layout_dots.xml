@@ -6,7 +6,36 @@
     android:id="@+id/parent"
     android:background="@drawable/morph_background"
     android:layout_width="match_parent"
-    android:layout_height="150dp">
+    android:layout_height="match_parent">
+
+    <io.codetail.widget.RevealFrameLayout
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        tools:visibility="gone"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/top">
+        <View
+            android:id="@+id/topPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:visibility="gone"
+            android:background="@color/colorAccent" />
+    </io.codetail.widget.RevealFrameLayout>
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        app:srcCompat="@drawable/ic_close"
+        tools:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="@dimen/spacing_huge"
+        android:layout_marginStart="@dimen/spacing_huge"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/top"
+        app:layout_constraintVertical_bias="0.5" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/first"
@@ -16,9 +45,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/second"
         app:layout_constraintTop_toTopOf="parent"
-        app:backgroundTint="@color/color_dot_first"
-        app:fabSize="normal"
-        app:layout_constraintHorizontal_chainStyle="spread" />
+        app:fabSize="normal" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/second"
@@ -35,6 +62,7 @@
         android:id="@+id/third"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:backgroundTint="@color/color_dot_first"
         app:layout_constraintTop_toTopOf="@+id/second"
         app:layout_constraintBottom_toBottomOf="@+id/second"
         app:layout_constraintLeft_toRightOf="@+id/second"

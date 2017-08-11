@@ -6,8 +6,8 @@
 
     <include
         android:layout_centerInParent="true"
-        android:layout_height="150dp"
-        android:layout_width="350dp"
+        android:layout_height="200dp"
+        android:layout_width="370dp"
         layout="@layout/layout_dots"/>
 
 </RelativeLayout>
