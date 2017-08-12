@@ -15,6 +15,11 @@ import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import com.vpaliy.fabexploration.BaseFragment;
 import com.vpaliy.fabexploration.R;
@@ -66,12 +71,13 @@ public class DotsFragment extends BaseFragment {
         ValueAnimator pathAnimator=ValueAnimator.ofFloat(0,1);
         pathAnimator.addUpdateListener(new ArcListener(arcPath,dot));
         topPanel.setBackgroundColor(dot.getBackgroundTintList().getDefaultColor());
-        pathAnimator.setStartDelay(100);
+        //pathAnimator.setStartDelay(100);
         pathAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                createRevealAnimator(dot).start();
+                Animator animator=createRevealAnimator(dot);
+                animator.start();
                 isFolded=!isFolded;
 
             }
@@ -104,6 +110,16 @@ public class DotsFragment extends BaseFragment {
         animator.start();
     }
 
+    @OnClick(R.id.third)
+    public void revealThird(FloatingActionButton dot){
+        lastDot=dot;
+        Animator animator=createRevealAnimator(lastDot);
+        AnimatorSet animatorSet=morphParent();
+        animatorSet.play(animator);
+        addScaleAnimation(animatorSet);
+        animatorSet.start();
+    }
+
     private Animator createRevealAnimator(FloatingActionButton dot){
         ViewCompat.setElevation(dot,0);
         dot.setVisibility(View.INVISIBLE);
@@ -123,8 +139,6 @@ public class DotsFragment extends BaseFragment {
     private void addScaleAnimation(AnimatorSet set){
         final int start=!isFolded?1:0;
         final int end =~start&0x1;
-        Log.d(DotsFragment.class.getSimpleName(),Integer.toString(start));
-        Log.d(DotsFragment.class.getSimpleName(),Integer.toString(end));
         for(int index=0;index<dots.size();index++){
             FloatingActionButton tempDot=dots.get(index);
             if(tempDot.getId()!=lastDot.getId()){
@@ -190,16 +204,15 @@ public class DotsFragment extends BaseFragment {
         ObjectAnimator cornerAnimation = ObjectAnimator.ofFloat(drawable, "cornerRadius", endValue);
         endValue=isFolded?parent.getHeight()/2:parent.getHeight()*2;
         ValueAnimator heightAnimation = ValueAnimator.ofInt(parent.getHeight(),endValue);
-        heightAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int val = (Integer) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = parent.getLayoutParams();
-                layoutParams.height = val;
-                parent.setLayoutParams(layoutParams);
-            }
+        heightAnimation.addUpdateListener(valueAnimator-> {
+            int val = (Integer) valueAnimator.getAnimatedValue();
+            ViewGroup.LayoutParams layoutParams = parent.getLayoutParams();
+            layoutParams.height = val;
+            parent.setLayoutParams(layoutParams);
         });
+
         AnimatorSet set=new AnimatorSet();
+        set.setInterpolator(new AccelerateInterpolator());
         set.playTogether(cornerAnimation,heightAnimation);
         set.setDuration(500);
         return set;
