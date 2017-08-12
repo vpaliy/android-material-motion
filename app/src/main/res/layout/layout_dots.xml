@@ -11,7 +11,7 @@
     <io.codetail.widget.RevealFrameLayout
         android:layout_width="0dp"
         android:layout_height="150dp"
-        tools:visibility="gone"
+        tools:background="@color/colorAccent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"

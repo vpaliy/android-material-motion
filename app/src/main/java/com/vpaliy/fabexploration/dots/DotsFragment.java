@@ -9,17 +9,12 @@ import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnticipateInterpolator;
-import android.view.animation.AnticipateOvershootInterpolator;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import com.vpaliy.fabexploration.BaseFragment;
 import com.vpaliy.fabexploration.R;
@@ -27,6 +22,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
+import android.support.annotation.Nullable;
 import io.codetail.animation.ViewAnimationUtils;
 
 public class DotsFragment extends BaseFragment {
@@ -39,6 +35,9 @@ public class DotsFragment extends BaseFragment {
 
     @BindView(R.id.topPanel)
     protected View topPanel;
+
+    @BindView(R.id.top)
+    protected ViewGroup top;
 
     @BindView(R.id.close)
     protected ImageView close;
@@ -71,7 +70,6 @@ public class DotsFragment extends BaseFragment {
         ValueAnimator pathAnimator=ValueAnimator.ofFloat(0,1);
         pathAnimator.addUpdateListener(new ArcListener(arcPath,dot));
         topPanel.setBackgroundColor(dot.getBackgroundTintList().getDefaultColor());
-        //pathAnimator.setStartDelay(100);
         pathAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -84,7 +82,7 @@ public class DotsFragment extends BaseFragment {
         });
         AnimatorSet animatorSet=morphParent();
         animatorSet.play(pathAnimator);
-        addScaleAnimation(animatorSet);
+        addScaleAnimation(50,150,animatorSet);
         animatorSet.start();
     }
 
@@ -102,7 +100,7 @@ public class DotsFragment extends BaseFragment {
                 pathAnimator.addUpdateListener(new ArcListener(arcPath,lastDot));
                 AnimatorSet animatorSet=morphParent();
                 animatorSet.play(pathAnimator);
-                addScaleAnimation(animatorSet);
+                addScaleAnimation(50,150,animatorSet);
                 animatorSet.start();
                 isFolded=!isFolded;
             }
@@ -110,22 +108,43 @@ public class DotsFragment extends BaseFragment {
         animator.start();
     }
 
-    @OnClick(R.id.third)
+    @OnClick(R.id.second)
     public void revealThird(FloatingActionButton dot){
         lastDot=dot;
-        Animator animator=createRevealAnimator(lastDot);
-        AnimatorSet animatorSet=morphParent();
-        animatorSet.play(animator);
-        addScaleAnimation(animatorSet);
-        animatorSet.start();
+        ViewGroup.LayoutParams params=top.getLayoutParams();
+        int height=params.height;
+        params.height= ConstraintLayout.LayoutParams.MATCH_PARENT;
+        top.setLayoutParams(params);
+        top.post(()->{
+            Animator animator=createRevealAnimator(lastDot);
+            AnimatorSet animatorSet=morphParent();
+            animatorSet.play(animator);
+            addScaleAnimation(0,100,animatorSet);
+            animatorSet.start();
+            animatorSet.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    ValueAnimator heightAnimation = ValueAnimator.ofInt(top.getHeight(),height);
+                    heightAnimation.addUpdateListener(valueAnimator-> {
+                        int val = (Integer) valueAnimator.getAnimatedValue();
+                        ViewGroup.LayoutParams layoutParams = top.getLayoutParams();
+                        layoutParams.height = val;
+                        top.setLayoutParams(layoutParams);
+                    });
+                    heightAnimation.setDuration(200);
+                    heightAnimation.start();
+                }
+            });
+        });
     }
 
     private Animator createRevealAnimator(FloatingActionButton dot){
         ViewCompat.setElevation(dot,0);
         dot.setVisibility(View.INVISIBLE);
         lastDot=dot;
-        int cx=topPanel.getWidth()/2;
-        int cy=topPanel.getHeight()/2;
+        int cx=(int)(dot.getX()+dot.getHeight()/2);
+        int cy=(int)(dot.getY()+dot.getHeight()/2);
         int w = topPanel.getWidth();
         int h = topPanel.getHeight();
         final int endRadius = !isFolded?(int) Math.hypot(w, h):dot.getHeight()/2;
@@ -136,20 +155,20 @@ public class DotsFragment extends BaseFragment {
         return animator;
     }
 
-    private void addScaleAnimation(AnimatorSet set){
+    private void addScaleAnimation(int startDelay, int duration, AnimatorSet set){
         final int start=!isFolded?1:0;
         final int end =~start&0x1;
         for(int index=0;index<dots.size();index++){
             FloatingActionButton tempDot=dots.get(index);
             if(tempDot.getId()!=lastDot.getId()){
-                int delay=index*50;
+                int delay=index*startDelay;
                 ObjectAnimator scaleX=ObjectAnimator.ofFloat(tempDot,View.SCALE_X,start,end);
                 ObjectAnimator scaleY=ObjectAnimator.ofFloat(tempDot,View.SCALE_Y,start,end);
                 scaleX.setStartDelay(delay);scaleY.setStartDelay(delay);
                 ObjectAnimator fade=ObjectAnimator.ofFloat(tempDot,View.ALPHA,start,end);
                 fade.setStartDelay(delay);
-                scaleX.setDuration(200);scaleY.setDuration(200);
-                fade.setDuration(200);
+                scaleX.setDuration(duration);scaleY.setDuration(duration);
+                fade.setDuration(duration);
                 set.playTogether(scaleX,scaleY,fade);
             }
         }
