@@ -88,6 +88,44 @@ public class DotsFragment extends BaseFragment {
 
     @OnClick(R.id.topPanel)
     public void conceal(){
+        if(lastDot.getId()==R.id.second){
+            int height=top.getHeight();
+            ValueAnimator heightAnimation = ValueAnimator.ofInt(top.getHeight(),parent.getHeight());
+            heightAnimation.addUpdateListener(valueAnimator-> {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = top.getLayoutParams();
+                layoutParams.height = val;
+                top.setLayoutParams(layoutParams);
+            });
+            heightAnimation.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    Animator animator=createRevealAnimator(lastDot);
+                    animator.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            super.onAnimationStart(animation);
+                            AnimatorSet animatorSet=morphParent();
+                            addScaleAnimation(50,150,animatorSet);
+                            animatorSet.start();
+                        }
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            lastDot.setVisibility(View.VISIBLE);
+                            topPanel.setVisibility(View.GONE);
+                            top.getLayoutParams().height=height;
+                            isFolded=!isFolded;
+                        }
+                    });
+                    animator.start();
+                }
+            });
+            heightAnimation.setDuration(200);
+            heightAnimation.start();
+            return;
+        }
+
         Animator animator=createRevealAnimator(lastDot);
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -134,6 +172,7 @@ public class DotsFragment extends BaseFragment {
                     });
                     heightAnimation.setDuration(200);
                     heightAnimation.start();
+                    isFolded=!isFolded;
                 }
             });
         });
@@ -158,20 +197,28 @@ public class DotsFragment extends BaseFragment {
     private void addScaleAnimation(int startDelay, int duration, AnimatorSet set){
         final int start=!isFolded?1:0;
         final int end =~start&0x1;
+        AnimatorSet buttonSet=new AnimatorSet();
         for(int index=0;index<dots.size();index++){
             FloatingActionButton tempDot=dots.get(index);
             if(tempDot.getId()!=lastDot.getId()){
                 int delay=index*startDelay;
                 ObjectAnimator scaleX=ObjectAnimator.ofFloat(tempDot,View.SCALE_X,start,end);
                 ObjectAnimator scaleY=ObjectAnimator.ofFloat(tempDot,View.SCALE_Y,start,end);
-                scaleX.setStartDelay(delay);scaleY.setStartDelay(delay);
                 ObjectAnimator fade=ObjectAnimator.ofFloat(tempDot,View.ALPHA,start,end);
+                scaleX.setStartDelay(delay);
+                scaleY.setStartDelay(delay);
                 fade.setStartDelay(delay);
-                scaleX.setDuration(duration);scaleY.setDuration(duration);
-                fade.setDuration(duration);
-                set.playTogether(scaleX,scaleY,fade);
+                buttonSet.playTogether(scaleX,scaleY,fade);
             }
         }
+        buttonSet.setDuration(duration);
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                buttonSet.start();
+            }
+        });
     }
 
     private Path createArcPath(View view, float endX, float endY, float radius){
