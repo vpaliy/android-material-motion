@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -80,6 +79,53 @@ public class DotsFragment extends BaseFragment {
                     super.onAnimationEnd(animation);
                     Animator animator = createRevealAnimator(dot, 0);
                     animator.start();
+                    runCloseAnimation();
+                    isFolded = !isFolded;
+                    finished=true;
+
+                }
+            });
+            AnimatorSet animatorSet = morphParent();
+            animatorSet.play(pathAnimator);
+            addScaleAnimation(50, 150, animatorSet);
+            animatorSet.start();
+        }
+    }
+
+    private void runCloseAnimation(){
+        close.setVisibility(View.VISIBLE);
+        close.setAlpha(0f);
+        close.setRotation(0f);
+        close.animate()
+                .alpha(1f)
+                .setDuration(300)
+                .start();
+        close.animate()
+                .rotation(-360)
+                .setDuration(300)
+                .setStartDelay(150)
+                .start();
+    }
+
+    @OnClick(R.id.third)
+    public void revealThird(FloatingActionButton dot){
+        if (finished) {
+            finished=false;
+            lastDot = dot;
+            float deltaX = topPanel.getWidth() / 2 - dot.getX() - dot.getWidth() / 2;
+            float deltaY = topPanel.getHeight() / 2 - dot.getY() - dot.getHeight() / 2;
+            deltaY -= topPanel.getHeight() / 2 + getResources().getDimension(R.dimen.morph_radius) / 4;
+            Path arcPath = createArcPath(dot, deltaX, deltaY, -deltaX);
+            ValueAnimator pathAnimator = ValueAnimator.ofFloat(0, 1);
+            pathAnimator.addUpdateListener(new ArcListener(arcPath, dot));
+            topPanel.setBackgroundColor(dot.getBackgroundTintList().getDefaultColor());
+            pathAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    Animator animator = createRevealAnimator(dot, 0);
+                    animator.start();
+                    runCloseAnimation();
                     isFolded = !isFolded;
                     finished=true;
 
@@ -95,6 +141,7 @@ public class DotsFragment extends BaseFragment {
     @OnClick(R.id.topPanel)
     public void conceal(){
         if(!finished) return;
+        close.setVisibility(View.INVISIBLE);
         finished=false;
         if(lastDot.getId()==R.id.second){
             int height=top.getHeight();
@@ -157,38 +204,40 @@ public class DotsFragment extends BaseFragment {
     }
 
     @OnClick(R.id.second)
-    public void revealThird(FloatingActionButton dot){
-        if(!finished) return;
-        lastDot=dot;
-        ViewGroup.LayoutParams params=top.getLayoutParams();
-        int height=params.height;
-        params.height= ConstraintLayout.LayoutParams.MATCH_PARENT;
-        top.setLayoutParams(params);
-        topPanel.setBackgroundColor(dot.getBackgroundTintList().getDefaultColor());
-        top.post(()->{
-            Animator animator=createRevealAnimator(lastDot,0);
-            AnimatorSet animatorSet=morphParent();
-            animatorSet.play(animator);
-            addScaleAnimation(0,100,animatorSet);
-            animatorSet.start();
-            animatorSet.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    ValueAnimator heightAnimation = ValueAnimator.ofInt(top.getHeight(),height);
-                    heightAnimation.addUpdateListener(valueAnimator-> {
-                        int val = (Integer) valueAnimator.getAnimatedValue();
-                        ViewGroup.LayoutParams layoutParams = top.getLayoutParams();
-                        layoutParams.height = val;
-                        top.setLayoutParams(layoutParams);
-                    });
-                    heightAnimation.setDuration(200);
-                    heightAnimation.start();
-                    isFolded=!isFolded;
-                    finished=true;
-                }
+    public void revealSecond(FloatingActionButton dot){
+        if(finished) {
+            lastDot = dot;
+            ViewGroup.LayoutParams params = top.getLayoutParams();
+            int height = params.height;
+            params.height = ConstraintLayout.LayoutParams.MATCH_PARENT;
+            top.setLayoutParams(params);
+            topPanel.setBackgroundColor(dot.getBackgroundTintList().getDefaultColor());
+            top.post(() -> {
+                Animator animator = createRevealAnimator(lastDot, 0);
+                AnimatorSet animatorSet = morphParent();
+                animatorSet.play(animator);
+                addScaleAnimation(0, 100, animatorSet);
+                animatorSet.start();
+                animatorSet.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        ValueAnimator heightAnimation = ValueAnimator.ofInt(top.getHeight(), height);
+                        heightAnimation.addUpdateListener(valueAnimator -> {
+                            int val = (Integer) valueAnimator.getAnimatedValue();
+                            ViewGroup.LayoutParams layoutParams = top.getLayoutParams();
+                            layoutParams.height = val;
+                            top.setLayoutParams(layoutParams);
+                        });
+                        heightAnimation.setDuration(200);
+                        heightAnimation.start();
+                        runCloseAnimation();
+                        isFolded = !isFolded;
+                        finished = true;
+                    }
+                });
             });
-        });
+        }
     }
 
     private Animator createRevealAnimator(FloatingActionButton dot, float offsetY){
