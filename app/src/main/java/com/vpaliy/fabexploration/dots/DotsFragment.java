@@ -11,6 +11,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,8 @@ import android.widget.ImageView;
 import com.vpaliy.fabexploration.BaseFragment;
 import com.vpaliy.fabexploration.R;
 import java.util.List;
+import java.util.Map;
+
 import io.codetail.animation.ViewAnimationUtils;
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -33,6 +37,9 @@ public class DotsFragment extends BaseFragment {
     @BindView(R.id.parent)
     protected ViewGroup parent;
 
+    @BindView(R.id.background)
+    protected View background;
+
     @BindView(R.id.topPanel)
     protected View topPanel;
 
@@ -42,8 +49,14 @@ public class DotsFragment extends BaseFragment {
     @BindView(R.id.close)
     protected ImageView close;
 
+    @BindView(R.id.root)
+    protected View root;
+
     private FloatingActionButton lastDot;
 
+    private ArrayMap<Integer,Integer> colors;
+
+    private int color;
     private boolean isFolded;
     private boolean finished=true;
 
@@ -58,6 +71,13 @@ public class DotsFragment extends BaseFragment {
         if (view != null) {
             topPanel.post(()->topPanel.setVisibility(View.GONE));
             close.post(()->close.setVisibility(View.GONE));
+            color=ContextCompat.getColor(getContext(),R.color.colorAccent);
+            int firstColor=ContextCompat.getColor(getContext(),R.color.color_dot_first);
+            int secondColor=ContextCompat.getColor(getContext(),R.color.color_dot_second);
+            colors=new ArrayMap<>();
+            colors.put(color,secondColor);
+            colors.put(firstColor,color);
+            colors.put(secondColor,firstColor);
         }
     }
 
@@ -72,7 +92,11 @@ public class DotsFragment extends BaseFragment {
             Path arcPath = createArcPath(dot, deltaX, deltaY, -deltaX);
             ValueAnimator pathAnimator = ValueAnimator.ofFloat(0, 1);
             pathAnimator.addUpdateListener(new ArcListener(arcPath, dot));
-            topPanel.setBackgroundColor(dot.getBackgroundTintList().getDefaultColor());
+            int dotColor=dot.getBackgroundTintList().getDefaultColor();
+            topPanel.setBackgroundColor(dotColor);
+            if(dotColor==color) {
+                backgroundReveal().start();
+            }
             pathAnimator.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
@@ -118,7 +142,11 @@ public class DotsFragment extends BaseFragment {
             Path arcPath = createArcPath(dot, deltaX, deltaY, -deltaX);
             ValueAnimator pathAnimator = ValueAnimator.ofFloat(0, 1);
             pathAnimator.addUpdateListener(new ArcListener(arcPath, dot));
-            topPanel.setBackgroundColor(dot.getBackgroundTintList().getDefaultColor());
+            int dotColor=dot.getBackgroundTintList().getDefaultColor();
+            topPanel.setBackgroundColor(dotColor);
+            if(dotColor==color) {
+                backgroundReveal().start();
+            }
             pathAnimator.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
@@ -214,6 +242,10 @@ public class DotsFragment extends BaseFragment {
             topPanel.setBackgroundColor(dot.getBackgroundTintList().getDefaultColor());
             top.post(() -> {
                 Animator animator = createRevealAnimator(lastDot, 0);
+                int dotColor=dot.getBackgroundTintList().getDefaultColor();
+                if(dotColor==color) {
+                    backgroundReveal().start();
+                }
                 AnimatorSet animatorSet = morphParent();
                 animatorSet.play(animator);
                 addScaleAnimation(0, 100, animatorSet);
@@ -253,6 +285,18 @@ public class DotsFragment extends BaseFragment {
         topPanel.setVisibility(View.VISIBLE);
         Animator animator= ViewAnimationUtils.createCircularReveal(topPanel,cx,cy,startRadius,endRadius);
         animator.setDuration(400);
+        return animator;
+    }
+
+    private Animator backgroundReveal(){
+        root.setBackgroundColor(color);
+        background.setBackgroundColor(color=colors.get(color));
+        int cx=(int)(parent.getX()+parent.getWidth()/2);
+        int cy=(int)(parent.getY()+parent.getHeight()/2);
+        int w = background.getWidth();
+        int h = background.getHeight();
+        Animator animator= ViewAnimationUtils.createCircularReveal(background,cx,cy,parent.getHeight()/2,(int)Math.hypot(w, h));
+        animator.setDuration(1000);
         return animator;
     }
 
