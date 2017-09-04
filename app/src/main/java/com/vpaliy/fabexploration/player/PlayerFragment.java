@@ -187,7 +187,8 @@ public class PlayerFragment extends BaseFragment {
     }
 
     private void runButtonAnimation(){
-        next.setVisibility(View.INVISIBLE);prev.setVisibility(View.INVISIBLE);
+        next.setScaleX(0);next.setScaleY(0);
+        prev.setScaleX(0);prev.setScaleY(0);
         Path arcPath=createArcPath(playPause,0,0,-playPause.getTranslationY());
         ValueAnimator pathAnimator=ValueAnimator.ofFloat(0,1);
         pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -208,6 +209,16 @@ public class PlayerFragment extends BaseFragment {
         pathAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         pathAnimator.setDuration(150);
         pathAnimator.start();
+        next.animate()
+                .setDuration(150)
+                .setStartDelay(50)
+                .scaleX(1).scaleY(1)
+                .start();
+        prev.animate()
+                .setDuration(150)
+                .setStartDelay(50)
+                .scaleX(1).scaleY(1)
+                .start();
     }
 
     private void setUpPauseDrawable(){
@@ -294,8 +305,8 @@ public class PlayerFragment extends BaseFragment {
     private void runRevealNProgress(){
         revealAnimator.setDuration(500);
         revealAnimator.setInterpolator(new DecelerateInterpolator());
-        seekBar.setProgress(50);
-        ObjectAnimator progressAnimator=ObjectAnimator.ofInt(seekBar,"progress",50,20);
+        seekBar.setProgress(80);
+        ObjectAnimator progressAnimator=ObjectAnimator.ofInt(seekBar,"progress",80,20);
         ObjectAnimator scaleY=ObjectAnimator.ofFloat(seekBar,View.SCALE_Y,0,1f);
         progressAnimator.setInterpolator(new DecelerateInterpolator());
         progressAnimator.setDuration(300);
