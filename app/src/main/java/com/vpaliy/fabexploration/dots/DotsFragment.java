@@ -105,8 +105,9 @@ public class DotsFragment extends BaseFragment {
                     runCloseAnimation();
                 }
             });
-            AnimatorSet animatorSet = morphParent();
+            AnimatorSet animatorSet = morphParent(500);
             animatorSet.play(pathAnimator);
+            animatorSet.setDuration(300);
             addScaleAnimation(50, 150, animatorSet);
             animatorSet.start();
         }
@@ -145,20 +146,17 @@ public class DotsFragment extends BaseFragment {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
-                    Animator animator=createRevealAnimator(lastDot,-lastDot.getHeight());
+                    Animator animator=createRevealAnimator(lastDot,0);
                     animator.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                            super.onAnimationStart(animation);
-                            AnimatorSet animatorSet=morphParent();
-                            addScaleAnimation(50,150,animatorSet);
-                            animatorSet.start();
-                        }
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             lastDot.setVisibility(View.VISIBLE);
                             topPanel.setVisibility(View.GONE);
                             top.getLayoutParams().height=height;
+                            AnimatorSet animatorSet=morphParent(500);
+                            animatorSet.setDuration(200);
+                            addScaleAnimation(50,100,animatorSet);
+                            animatorSet.start();
                             finished=true;
                             isFolded=!isFolded;
                         }
@@ -166,7 +164,7 @@ public class DotsFragment extends BaseFragment {
                     animator.start();
                 }
             });
-            heightAnimation.setDuration(200);
+            heightAnimation.setDuration(400);
             heightAnimation.start();
             return;
         }
@@ -181,9 +179,9 @@ public class DotsFragment extends BaseFragment {
                 Path arcPath=createArcPath(lastDot,0,0,lastDot.getTranslationX());
                 ValueAnimator pathAnimator=ValueAnimator.ofFloat(0,1);
                 pathAnimator.addUpdateListener(new ArcListener(arcPath,lastDot));
-                AnimatorSet animatorSet=morphParent();
+                AnimatorSet animatorSet=morphParent(500);
                 animatorSet.play(pathAnimator);
-                addScaleAnimation(50,150,animatorSet);
+                addScaleAnimation(350,100,animatorSet);
                 finish(animatorSet);
                 animatorSet.start();
             }
@@ -207,10 +205,9 @@ public class DotsFragment extends BaseFragment {
                 if(dotColor==color) {
                     backgroundReveal().start();
                 }
-                AnimatorSet animatorSet = morphParent();
+                AnimatorSet animatorSet = morphParent(500);
                 animatorSet.play(animator);
                 addScaleAnimation(0, 100, animatorSet);
-                animatorSet.start();
                 animatorSet.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
@@ -228,6 +225,7 @@ public class DotsFragment extends BaseFragment {
                         runCloseAnimation();
                     }
                 });
+                animatorSet.start();
             });
         }
     }
@@ -289,33 +287,7 @@ public class DotsFragment extends BaseFragment {
             }
         }
         buttonSet.setDuration(duration);
-        set.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                buttonSet.start();
-            }
-        });
-    }
-
-    private Path createArcPath(View view, float endX, float endY, float radius){
-        Path arcPath=new Path();
-        float startX=view.getTranslationX();
-        float startY=view.getTranslationY();
-        float midX = startX + ((endX - startX) / 2);
-        float midY = startY + ((endY - startY) / 2);
-        float xDiff = midX - startX;
-        float yDiff = midY - startY;
-
-        double angle = (Math.atan2(yDiff, xDiff) * (180 / Math.PI)) - 90;
-        double angleRadians = Math.toRadians(angle);
-
-        float pointX = (float) (midX + radius * Math.cos(angleRadians));
-        float pointY = (float) (midY + radius * Math.sin(angleRadians));
-
-        arcPath.moveTo(startX, startY);
-        arcPath.cubicTo(startX,startY,pointX,pointY, endX, endY);
-        return arcPath;
+        set.playTogether(buttonSet);
     }
 
     private class ArcListener implements ValueAnimator.AnimatorUpdateListener{
@@ -341,7 +313,7 @@ public class DotsFragment extends BaseFragment {
         }
     }
 
-    private AnimatorSet morphParent(){
+    private AnimatorSet morphParent(int duration){
         GradientDrawable drawable=GradientDrawable.class.cast(parent.getBackground());
         int endValue=isFolded?getResources().getDimensionPixelOffset(R.dimen.morph_radius):0;
         ObjectAnimator cornerAnimation = ObjectAnimator.ofFloat(drawable, "cornerRadius", endValue);
@@ -353,11 +325,11 @@ public class DotsFragment extends BaseFragment {
             layoutParams.height = val;
             parent.setLayoutParams(layoutParams);
         });
-
+        cornerAnimation.setDuration(duration);
+        heightAnimation.setDuration(duration);
         AnimatorSet set=new AnimatorSet();
         set.setInterpolator(new AccelerateInterpolator());
         set.playTogether(cornerAnimation,heightAnimation);
-        set.setDuration(500);
         return set;
     }
 }

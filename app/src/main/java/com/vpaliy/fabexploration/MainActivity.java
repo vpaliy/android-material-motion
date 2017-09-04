@@ -7,12 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
-
 import com.vpaliy.fabexploration.dots.DotsFragment;
 import com.vpaliy.fabexploration.player.PlayerFragment;
-
-import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.BindView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,21 +20,23 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.frame)
     protected FrameLayout frameLayout;
 
+    @BindView(R.id.navigation)
+    protected NavigationView navigation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ButterKnife.bind(this);
         setUpDrawer();
+        navigation.setCheckedItem(R.id.dots);
     }
 
     private void setUpDrawer(){
         drawer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-
-        NavigationView navigationView=ButterKnife.findById(this,R.id.navigation);
-        navigationView.setNavigationItemSelectedListener(item ->{
+        navigation.setNavigationItemSelectedListener(item ->{
             drawer.closeDrawers();
             switch (item.getItemId()){
                 case R.id.player:
@@ -57,6 +57,4 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
     }
-
-
 }

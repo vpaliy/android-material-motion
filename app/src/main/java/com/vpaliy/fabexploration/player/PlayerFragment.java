@@ -181,14 +181,6 @@ public class PlayerFragment extends BaseFragment {
                 actionButton.setVisibility(View.INVISIBLE);
                 fadeInOutViews(0,100);
             }
-
-            private float deltaX(View view){
-                return cx-(view.getLeft()+view.getWidth()/2);
-            }
-
-            private float deltaY(View view){
-                return cy-(view.getTop()+view.getHeight()/2);
-            }
         });
         revealAnimator.setDuration(250);
         revealAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -363,25 +355,6 @@ public class PlayerFragment extends BaseFragment {
                 .scaleY(30).start();
     }
 
-    private Path createArcPath(View view, float endX, float endY,float radius){
-        Path arcPath=new Path();
-        float startX=view.getTranslationX();
-        float startY=view.getTranslationY();
-        float midX = startX + ((endX - startX) / 2);
-        float midY = startY + ((endY - startY) / 2);
-        float xDiff = midX - startX;
-        float yDiff = midY - startY;
-
-        double angle = (Math.atan2(yDiff, xDiff) * (180 / Math.PI)) - 90;
-        double angleRadians = Math.toRadians(angle);
-
-        float pointX = (float) (midX + radius * Math.cos(angleRadians));
-        float pointY = (float) (midY + radius * Math.sin(angleRadians));
-
-        arcPath.moveTo(startX, startY);
-        arcPath.cubicTo(startX,startY,pointX,pointY, endX, endY);
-        return arcPath;
-    }
 
     private void backAnimation(){
         float endX=0;

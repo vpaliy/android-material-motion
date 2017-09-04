@@ -24,4 +24,6 @@
     <dimen name="details_subtitle_size">18sp</dimen>
 
     <dimen name="morph_radius">100dp</dimen>
+
+    <dimen name="panel_height">150dp</dimen>
 </resources>
