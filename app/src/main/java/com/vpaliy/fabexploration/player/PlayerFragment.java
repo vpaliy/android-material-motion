@@ -1,4 +1,4 @@
-package com.vpaliy.fabexploration;
+package com.vpaliy.fabexploration.player;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -23,6 +23,10 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.vpaliy.fabexploration.BaseFragment;
+import com.vpaliy.fabexploration.R;
+
 import java.util.List;
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -30,7 +34,7 @@ import butterknife.OnClick;
 import io.codetail.animation.ViewAnimationUtils;
 import io.codetail.widget.RevealFrameLayout;
 
-public class PlayerFragment extends BaseFragment{
+public class PlayerFragment extends BaseFragment {
 
     @BindView(R.id.fab)
     protected FloatingActionButton actionButton;

@@ -21,8 +21,6 @@ import android.widget.ImageView;
 import com.vpaliy.fabexploration.BaseFragment;
 import com.vpaliy.fabexploration.R;
 import java.util.List;
-import java.util.Map;
-
 import io.codetail.animation.ViewAnimationUtils;
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -81,8 +79,8 @@ public class DotsFragment extends BaseFragment {
         }
     }
 
-    @OnClick(R.id.first)
-    public void revealFirst(FloatingActionButton dot) {
+    @OnClick({R.id.first,R.id.third})
+    public void revealSides(FloatingActionButton dot) {
         if (finished) {
             finished=false;
             lastDot = dot;
@@ -102,11 +100,9 @@ public class DotsFragment extends BaseFragment {
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
                     Animator animator = createRevealAnimator(dot, 0);
+                    finish(animator);
                     animator.start();
                     runCloseAnimation();
-                    isFolded = !isFolded;
-                    finished=true;
-
                 }
             });
             AnimatorSet animatorSet = morphParent();
@@ -129,41 +125,6 @@ public class DotsFragment extends BaseFragment {
                 .setDuration(300)
                 .setStartDelay(150)
                 .start();
-    }
-
-    @OnClick(R.id.third)
-    public void revealThird(FloatingActionButton dot){
-        if (finished) {
-            finished=false;
-            lastDot = dot;
-            float deltaX = topPanel.getWidth() / 2 - dot.getX() - dot.getWidth() / 2;
-            float deltaY = topPanel.getHeight() / 2 - dot.getY() - dot.getHeight() / 2;
-            deltaY -= topPanel.getHeight() / 2 + getResources().getDimension(R.dimen.morph_radius) / 4;
-            Path arcPath = createArcPath(dot, deltaX, deltaY, -deltaX);
-            ValueAnimator pathAnimator = ValueAnimator.ofFloat(0, 1);
-            pathAnimator.addUpdateListener(new ArcListener(arcPath, dot));
-            int dotColor=dot.getBackgroundTintList().getDefaultColor();
-            topPanel.setBackgroundColor(dotColor);
-            if(dotColor==color) {
-                backgroundReveal().start();
-            }
-            pathAnimator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    Animator animator = createRevealAnimator(dot, 0);
-                    animator.start();
-                    runCloseAnimation();
-                    isFolded = !isFolded;
-                    finished=true;
-
-                }
-            });
-            AnimatorSet animatorSet = morphParent();
-            animatorSet.play(pathAnimator);
-            addScaleAnimation(50, 150, animatorSet);
-            animatorSet.start();
-        }
     }
 
     @OnClick(R.id.topPanel)
@@ -198,8 +159,8 @@ public class DotsFragment extends BaseFragment {
                             lastDot.setVisibility(View.VISIBLE);
                             topPanel.setVisibility(View.GONE);
                             top.getLayoutParams().height=height;
-                            isFolded=!isFolded;
                             finished=true;
+                            isFolded=!isFolded;
                         }
                     });
                     animator.start();
@@ -223,9 +184,8 @@ public class DotsFragment extends BaseFragment {
                 AnimatorSet animatorSet=morphParent();
                 animatorSet.play(pathAnimator);
                 addScaleAnimation(50,150,animatorSet);
+                finish(animatorSet);
                 animatorSet.start();
-                isFolded=!isFolded;
-                finished=true;
             }
         });
         animator.start();
@@ -234,6 +194,7 @@ public class DotsFragment extends BaseFragment {
     @OnClick(R.id.second)
     public void revealSecond(FloatingActionButton dot){
         if(finished) {
+            finished=false;
             lastDot = dot;
             ViewGroup.LayoutParams params = top.getLayoutParams();
             int height = params.height;
@@ -262,14 +223,24 @@ public class DotsFragment extends BaseFragment {
                             top.setLayoutParams(layoutParams);
                         });
                         heightAnimation.setDuration(200);
+                        finish(heightAnimation);
                         heightAnimation.start();
                         runCloseAnimation();
-                        isFolded = !isFolded;
-                        finished = true;
                     }
                 });
             });
         }
+    }
+
+    private void finish(Animator animator){
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                isFolded=!isFolded;
+                finished=!finished;
+            }
+        });
     }
 
     private Animator createRevealAnimator(FloatingActionButton dot, float offsetY){

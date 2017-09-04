@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.vpaliy.fabexploration.dots.DotsFragment;
+import com.vpaliy.fabexploration.player.PlayerFragment;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
