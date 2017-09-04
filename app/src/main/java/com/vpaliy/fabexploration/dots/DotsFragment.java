@@ -16,7 +16,7 @@ import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import com.vpaliy.fabexploration.BaseFragment;
 import com.vpaliy.fabexploration.R;
@@ -105,9 +105,8 @@ public class DotsFragment extends BaseFragment {
                     runCloseAnimation();
                 }
             });
-            AnimatorSet animatorSet = morphParent(500);
+            AnimatorSet animatorSet = morphParent(400);
             animatorSet.play(pathAnimator);
-            animatorSet.setDuration(300);
             addScaleAnimation(50, 150, animatorSet);
             animatorSet.start();
         }
@@ -276,13 +275,14 @@ public class DotsFragment extends BaseFragment {
         for(int index=0;index<dots.size();index++){
             FloatingActionButton tempDot=dots.get(index);
             if(tempDot.getId()!=lastDot.getId()){
-                int delay=index*startDelay;
                 ObjectAnimator scaleX=ObjectAnimator.ofFloat(tempDot,View.SCALE_X,start,end);
                 ObjectAnimator scaleY=ObjectAnimator.ofFloat(tempDot,View.SCALE_Y,start,end);
                 ObjectAnimator fade=ObjectAnimator.ofFloat(tempDot,View.ALPHA,start,end);
-                scaleX.setStartDelay(delay);
-                scaleY.setStartDelay(delay);
-                fade.setStartDelay(delay);
+                scaleX.setStartDelay(startDelay);
+                scaleY.setStartDelay(startDelay);
+                scaleX.setInterpolator(new OvershootInterpolator(2));
+                scaleY.setInterpolator(new OvershootInterpolator(2));
+                fade.setStartDelay(startDelay);
                 buttonSet.playTogether(scaleX,scaleY,fade);
             }
         }
@@ -328,7 +328,6 @@ public class DotsFragment extends BaseFragment {
         cornerAnimation.setDuration(duration);
         heightAnimation.setDuration(duration);
         AnimatorSet set=new AnimatorSet();
-        set.setInterpolator(new AccelerateInterpolator());
         set.playTogether(cornerAnimation,heightAnimation);
         return set;
     }
