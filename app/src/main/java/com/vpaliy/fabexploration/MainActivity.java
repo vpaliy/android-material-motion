@@ -6,6 +6,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import com.vpaliy.fabexploration.dots.DotsFragment;
 import com.vpaliy.fabexploration.player.PlayerFragment;
@@ -40,9 +41,11 @@ public class MainActivity extends AppCompatActivity {
             drawer.closeDrawers();
             switch (item.getItemId()){
                 case R.id.player:
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                     loadFragment(new PlayerFragment());
                     return true;
                 case R.id.dots:
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                     loadFragment(new DotsFragment());
                     return true;
             }
