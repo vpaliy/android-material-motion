@@ -10,8 +10,6 @@ import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -23,16 +21,17 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
+import io.codetail.animation.ViewAnimationUtils;
+import io.codetail.widget.RevealFrameLayout;
 import com.vpaliy.fabexploration.BaseFragment;
 import com.vpaliy.fabexploration.R;
-
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
-import io.codetail.animation.ViewAnimationUtils;
-import io.codetail.widget.RevealFrameLayout;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.Nullable;
 
 public class PlayerFragment extends BaseFragment {
 
@@ -172,8 +171,6 @@ public class PlayerFragment extends BaseFragment {
         playPause.setTranslationX(deltaX);
         playPause.setTranslationY(deltaY);
         revealAnimator = ViewAnimationUtils.createCircularReveal(panel, cx, cy, actionButton.getHeight(), endRadius);
-
-        //
         revealAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {

@@ -8,9 +8,6 @@
             android:id="@+id/player">
         </item>
         <item
-            android:title="@string/movies_example"
-            android:id="@+id/movies"/>
-        <item
             android:title="@string/dots_example"
             android:id="@+id/dots"/>
     </group>

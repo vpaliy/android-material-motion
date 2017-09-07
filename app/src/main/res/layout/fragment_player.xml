@@ -7,7 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.vpaliy.fabexploration.MainActivity">
-
     <ImageView
         android:id="@+id/image"
         android:layout_width="0dp"
@@ -20,7 +19,6 @@
         app:layout_constraintVertical_bias="0.0"
         app:layout_constraintBottom_toTopOf="@+id/divider"
         app:layout_constraintHorizontal_bias="0.0" />
-
     <include
         android:layout_height="?attr/actionBarSize"
         android:layout_width="0dp"
@@ -28,7 +26,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <com.vpaliy.fabexploration.SeparatorView
         android:id="@+id/divider"
         android:layout_width="wrap_content"
@@ -39,7 +36,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
-
     <View
         android:id="@+id/background"
         android:layout_width="wrap_content"
@@ -49,7 +45,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider"
         app:layout_constraintHorizontal_bias="0.0" />
-
     <TextView
         android:id="@+id/track_author"
         android:textColor="#fafafa"
@@ -64,7 +59,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.316"
         android:layout_marginEnd="8dp" />
-
     <include
         android:id="@+id/controls"
         android:layout_width="0dp"
@@ -75,8 +69,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/bottom_background"
         app:layout_constraintTop_toBottomOf="@+id/divider"/>
-
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -90,7 +82,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.669" />
-
     <TextView
         android:id="@+id/album"
         android:text="@string/track_title"
@@ -101,7 +92,6 @@
         android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="@+id/track_author"
         app:layout_constraintTop_toBottomOf="@+id/track_author" />
-
     <View
         android:id="@+id/bottom_background"
         android:layout_width="0dp"
@@ -112,18 +102,17 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/background"
         app:layout_constraintBottom_toBottomOf="parent" />
-
     <ImageView
         android:id="@+id/sound_play"
         app:srcCompat="@drawable/ic_volume_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
+        android:layout_marginLeft="@dimen/spacing_huge"
+        android:layout_marginStart="@dimen/spacing_huge"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottom_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.5" />
-
     <TextView
         android:id="@+id/song_number"
         android:text="1"
@@ -134,8 +123,8 @@
         app:layout_constraintTop_toTopOf="@+id/sound_play"
         app:layout_constraintBottom_toBottomOf="@+id/sound_play"
         app:layout_constraintLeft_toRightOf="@+id/sound_play"
-        android:layout_marginLeft="32dp" />
-
+        android:layout_marginLeft="@dimen/spacing_huge"
+        android:layout_marginStart="@dimen/spacing_huge"/>
     <TextView
         android:id="@+id/track_title"
         android:text="One Day"
@@ -146,8 +135,8 @@
         app:layout_constraintTop_toTopOf="@+id/song_number"
         app:layout_constraintBottom_toBottomOf="@+id/song_number"
         app:layout_constraintLeft_toRightOf="@+id/song_number"
-        android:layout_marginLeft="32dp" />
-
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="@dimen/spacing_huge"/>
     <TextView
         android:id="@+id/duration"
         android:textSize="17sp"
@@ -155,10 +144,10 @@
         android:text="4:15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="34dp"
+        android:layout_marginRight="@dimen/spacing_huge"
+        android:layout_marginEnd="@dimen/spacing_huge"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottom_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.48" />
-
 </android.support.constraint.ConstraintLayout>

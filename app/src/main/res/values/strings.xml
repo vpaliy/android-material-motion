@@ -7,4 +7,5 @@
     <string name="player_example">Player</string>
     <string name="movies_example">Movies</string>
     <string name="dots_example">Dots</string>
+    <string name="swipe_note">Swipe to the left </string>
 </resources>

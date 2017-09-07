@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main);
         ButterKnife.bind(this);
         setUpDrawer();
-        navigation.setCheckedItem(R.id.dots);
+        loadFragment(new PlayerFragment());
     }
 
     private void setUpDrawer(){
