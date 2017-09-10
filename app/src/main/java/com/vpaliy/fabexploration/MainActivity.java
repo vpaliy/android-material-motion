@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import com.vpaliy.fabexploration.dots.DotsFragment;
 import com.vpaliy.fabexploration.player.PlayerFragment;
+
 import butterknife.ButterKnife;
 import butterknife.BindView;
 

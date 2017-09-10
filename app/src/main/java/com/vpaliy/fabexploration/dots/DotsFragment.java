@@ -105,9 +105,9 @@ public class DotsFragment extends BaseFragment {
                     runCloseAnimation();
                 }
             });
-            AnimatorSet animatorSet = morphParent(400);
+            AnimatorSet animatorSet = morphParent(duration(R.integer.reveal_duration));
             animatorSet.play(pathAnimator);
-            addScaleAnimation(50, 150, animatorSet);
+            addScaleAnimation(duration(R.integer.short_delay), duration(R.integer.fade_duration), animatorSet);
             animatorSet.start();
         }
     }
@@ -118,12 +118,12 @@ public class DotsFragment extends BaseFragment {
         close.setRotation(0f);
         close.animate()
                 .alpha(1f)
-                .setDuration(300)
+                .setDuration(duration(R.integer.close_duration))
                 .start();
         close.animate()
                 .rotation(-360)
-                .setDuration(300)
-                .setStartDelay(150)
+                .setDuration(duration(R.integer.close_duration))
+                .setStartDelay(duration(R.integer.medium_delay))
                 .start();
     }
 
@@ -152,9 +152,11 @@ public class DotsFragment extends BaseFragment {
                             lastDot.setVisibility(View.VISIBLE);
                             topPanel.setVisibility(View.GONE);
                             top.getLayoutParams().height=height;
-                            AnimatorSet animatorSet=morphParent(500);
-                            animatorSet.setDuration(200);
-                            addScaleAnimation(50,100,animatorSet);
+                            AnimatorSet animatorSet=morphParent(duration(R.integer.conceal_duration));
+                            animatorSet.setDuration(duration(R.integer.conceal_duration)/2);
+                            addScaleAnimation(duration(R.integer.short_delay),
+                                    duration(R.integer.fade_in_duration),
+                                    animatorSet);
                             animatorSet.start();
                             finished=true;
                             isFolded=!isFolded;
@@ -163,7 +165,7 @@ public class DotsFragment extends BaseFragment {
                     animator.start();
                 }
             });
-            heightAnimation.setDuration(400);
+            heightAnimation.setDuration(duration(R.integer.conceal_duration));
             heightAnimation.start();
             return;
         }
@@ -178,9 +180,10 @@ public class DotsFragment extends BaseFragment {
                 Path arcPath=createArcPath(lastDot,0,0,lastDot.getTranslationX());
                 ValueAnimator pathAnimator=ValueAnimator.ofFloat(0,1);
                 pathAnimator.addUpdateListener(new ArcListener(arcPath,lastDot));
-                AnimatorSet animatorSet=morphParent(500);
+                AnimatorSet animatorSet=morphParent(duration(R.integer.conceal_duration));
                 animatorSet.play(pathAnimator);
-                addScaleAnimation(350,100,animatorSet);
+                addScaleAnimation(duration(R.integer.long_delay),
+                        duration(R.integer.fade_in_duration),animatorSet);
                 finish(animatorSet);
                 animatorSet.start();
             }
@@ -204,9 +207,9 @@ public class DotsFragment extends BaseFragment {
                 if(dotColor==color) {
                     backgroundReveal().start();
                 }
-                AnimatorSet animatorSet = morphParent(500);
+                AnimatorSet animatorSet = morphParent(duration(R.integer.reveal_duration));
                 animatorSet.play(animator);
-                addScaleAnimation(0, 100, animatorSet);
+                addScaleAnimation(0, duration(R.integer.short_delay), animatorSet);
                 animatorSet.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
@@ -218,7 +221,7 @@ public class DotsFragment extends BaseFragment {
                             layoutParams.height = val;
                             top.setLayoutParams(layoutParams);
                         });
-                        heightAnimation.setDuration(200);
+                        heightAnimation.setDuration(duration(R.integer.reveal_duration)/2);
                         finish(heightAnimation);
                         heightAnimation.start();
                         runCloseAnimation();
@@ -252,7 +255,7 @@ public class DotsFragment extends BaseFragment {
         final int startRadius=isFolded?(int) Math.hypot(w, h):dot.getHeight()/2;
         topPanel.setVisibility(View.VISIBLE);
         Animator animator= ViewAnimationUtils.createCircularReveal(topPanel,cx,cy,startRadius,endRadius);
-        animator.setDuration(400);
+        animator.setDuration(duration(R.integer.reveal_duration));
         return animator;
     }
 
@@ -264,7 +267,7 @@ public class DotsFragment extends BaseFragment {
         int w = background.getWidth();
         int h = background.getHeight();
         Animator animator= ViewAnimationUtils.createCircularReveal(background,cx,cy,parent.getHeight()/2,(int)Math.hypot(w, h));
-        animator.setDuration(1000);
+        animator.setDuration(duration(R.integer.reveal_duration)*2);
         return animator;
     }
 

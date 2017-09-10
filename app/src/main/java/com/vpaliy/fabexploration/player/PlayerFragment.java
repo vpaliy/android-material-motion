@@ -122,11 +122,11 @@ public class PlayerFragment extends BaseFragment {
                     public void onAnimationStart(Animator animation) {
                         super.onAnimationStart(animation);
                         ViewCompat.setElevation(actionButton,0);
-                        fadeInOutViews(1,150);
+                        fadeInOutViews(1,duration(R.integer.fade_duration));
                         actionButton.setVisibility(View.VISIBLE);
                         actionButton.animate()
                                 .alpha(1)
-                                .setDuration(100)
+                                .setDuration(duration(R.integer.fade_in_duration))
                                 .setListener(null)
                                 .start();
                     }
@@ -137,18 +137,18 @@ public class PlayerFragment extends BaseFragment {
                         panel.setVisibility(View.GONE);
                         backAnimation();
                         divider.animate()
-                                .setDuration(100)
+                                .setDuration(duration(R.integer.fade_in_duration))
                                 .scaleY(1).start();
                         bottomBackground.setPivotY(0);
                         bottomBackground.animate()
-                                .setDuration(100)
+                                .setDuration(duration(R.integer.fade_in_duration))
                                 .scaleY(0).start();
                         runIconScale(0,R.drawable.ic_volume_bottom,
                                 ContextCompat.getColor(getContext(),R.color.color_grey));
                         setUpReveal();
                     }
                 });
-                revealAnimator.setDuration(100);
+                revealAnimator.setDuration(duration(R.integer.fade_in_duration));
                 revealAnimator.start();
             });
             panel.setVisibility(View.GONE);
@@ -176,10 +176,10 @@ public class PlayerFragment extends BaseFragment {
             public void onAnimationStart(Animator animation) {
                 panel.setVisibility(View.VISIBLE);
                 actionButton.setVisibility(View.INVISIBLE);
-                fadeInOutViews(0,100);
+                fadeInOutViews(0,duration(R.integer.fade_in_duration));
             }
         });
-        revealAnimator.setDuration(250);
+        revealAnimator.setDuration(duration(R.integer.conceal_duration)/2);
         revealAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
     }
 
@@ -204,16 +204,16 @@ public class PlayerFragment extends BaseFragment {
             }
         });
         pathAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        pathAnimator.setDuration(150);
+        pathAnimator.setDuration(duration(R.integer.path_duration)/2);
         pathAnimator.start();
         next.animate()
-                .setDuration(150)
-                .setStartDelay(50)
+                .setDuration(duration(R.integer.scale_duration))
+                .setStartDelay(duration(R.integer.short_delay))
                 .scaleX(1).scaleY(1)
                 .start();
         prev.animate()
-                .setDuration(150)
-                .setStartDelay(50)
+                .setDuration(duration(R.integer.scale_duration))
+                .setStartDelay(duration(R.integer.short_delay))
                 .scaleX(1).scaleY(1)
                 .start();
     }
@@ -296,18 +296,19 @@ public class PlayerFragment extends BaseFragment {
             }
         });
         pathAnimator.setInterpolator(new DecelerateInterpolator());
-        pathAnimator.setDuration(300);pathAnimator.start();
+        pathAnimator.setDuration(duration(R.integer.path_duration));
+        pathAnimator.start();
     }
 
     private void runRevealNProgress(){
-        revealAnimator.setDuration(500);
+        revealAnimator.setDuration(duration(R.integer.conceal_duration));
         revealAnimator.setInterpolator(new DecelerateInterpolator());
         seekBar.setProgress(80);
         ObjectAnimator progressAnimator=ObjectAnimator.ofInt(seekBar,"progress",80,20);
         ObjectAnimator scaleY=ObjectAnimator.ofFloat(seekBar,View.SCALE_Y,0,1f);
         progressAnimator.setInterpolator(new DecelerateInterpolator());
-        progressAnimator.setDuration(300);
-        scaleY.setDuration(300);
+        progressAnimator.setDuration(duration(R.integer.progress_duration));
+        scaleY.setDuration(duration(R.integer.progress_duration));
         AnimatorSet animatorSet=new AnimatorSet();
         animatorSet.play(revealAnimator);
         animatorSet.play(progressAnimator).with(scaleY);
@@ -333,7 +334,7 @@ public class PlayerFragment extends BaseFragment {
         soundPlay.animate()
                 .scaleY(0)
                 .scaleX(0)
-                .setDuration(20)
+                .setDuration(duration(R.integer.short_delay))
                 .setStartDelay(delay)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
@@ -344,7 +345,7 @@ public class PlayerFragment extends BaseFragment {
                         soundPlay.animate()
                                 .scaleX(1)
                                 .scaleY(1)
-                                .setDuration(150)
+                                .setDuration(duration(R.integer.scale_duration))
                                 .setListener(null).start();
                     }
                 }).start();
@@ -353,13 +354,13 @@ public class PlayerFragment extends BaseFragment {
     private void runBottomDividerScale(){
         bottomBackground.setPivotY(0);
         bottomBackground.animate()
-                .setDuration(375)
+                .setDuration(duration(R.integer.divider_duration))
                 .scaleY(100).start();
     }
 
     private void runTopDividerScale(){
         divider.animate()
-                .setDuration(375)
+                .setDuration(duration(R.integer.divider_duration))
                 .scaleY(30).start();
     }
 
@@ -404,6 +405,7 @@ public class PlayerFragment extends BaseFragment {
             }
         });
         pathAnimator.setInterpolator(new DecelerateInterpolator());
-        pathAnimator.setDuration(300);pathAnimator.start();
+        pathAnimator.setDuration(duration(R.integer.path_duration));
+        pathAnimator.start();
     }
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dots -->
+    <integer name="conceal_duration">500</integer>
+    <integer name="reveal_duration">400</integer>
+    <integer name="fade_duration">150</integer>
+    <integer name="close_duration">300</integer>
+    <integer name="short_delay">50</integer>
+    <integer name="medium_delay">150</integer>
+    <integer name="long_delay">350</integer>
+    <integer name="fade_in_duration">100</integer>
+
+    <!-- Player -->
+    <integer name="scale_duration">150</integer>
+    <integer name="short_scale_duration">20</integer>
+    <integer name="path_duration">300</integer>
+    <integer name="progress_duration">300</integer>
+    <integer name="divider_duration">375</integer>
+</resources>
