@@ -69,10 +69,11 @@ public class NotifierTask extends TimerTask {
             return this;
         }
 
-        public void start(){
+        public NotifierTask start(){
             Timer timer=new Timer();
             final NotifierTask task=new NotifierTask(this);
             timer.schedule(task,delay,period);
+            return task;
         }
     }
 

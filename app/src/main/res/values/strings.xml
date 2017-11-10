@@ -6,6 +6,7 @@
 
     <string name="drawer_warning">Open the drawer to change the animation</string>
     <string name="disappear_message">This message will disappear in</string>
+    <string name="enable_message">Turn Off Warning</string>
     <string name="player_example">Player</string>
     <string name="movies_example">Movies</string>
     <string name="dots_example">Dots</string>
