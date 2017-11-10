@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.vpaliy.fabexploration"
         minSdkVersion 16
@@ -38,7 +38,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile ('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
-        transitive = true;
+        transitive = true
     }
     compile 'com.github.ohoussein.playpauseview:playpauseview:1.0.1'
     compile "com.andkulikov:transitionseverywhere:1.7.4"
