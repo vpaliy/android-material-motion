@@ -11,31 +11,35 @@ public class NotifierTask extends TimerTask {
     private Callback callback;
     private final TextView target;
     private final Context context;
+    private final String message;
 
     private NotifierTask(Starter starter){
         this.count=starter.count;
         this.target=starter.target;
         this.callback=starter.callback;
         this.context=target.getContext();
+        this.message=target.getText().toString();
     }
 
     @Override
     public void run() {
         if(count < 0) return;
-        count--;
         if(count==0){
             cancel();
             if(callback!=null){
                 callback.onFinished();
             }
         }else notifyTarget();
+        count--;
     }
 
     private void notifyTarget(){
+        target.post(()->target.setText(buildNotification()));
+    }
 
-        target.post(()->{
-            target.setText("Message will disapper in "+(count+1));
-        });
+    private String buildNotification(){
+        return message+"\n"+ context.
+                getString(R.string.disappear_message)+":"+count;
     }
 
     public static class Starter {

@@ -2,7 +2,6 @@ package com.vpaliy.fabexploration;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
@@ -62,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadFragment(Fragment fragment){
+        message.setText(R.string.drawer_warning);
         message.setScaleX(0f);message.setScaleY(0f);
         message.animate()
                 .scaleX(1)
@@ -73,29 +73,19 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
-                        final ObjectAnimator dragAnimator=ObjectAnimator.ofFloat(message,View.TRANSLATION_X,-50,50);
-                        dragAnimator.setRepeatCount(2);
-                        dragAnimator.setDuration(100);
-                        dragAnimator.addListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                super.onAnimationEnd(animation);
-                                message.setTranslationX(0);
-                                new NotifierTask.Starter(message,5)
-                                        .setCallback(()-> message.postDelayed(() ->
-                                                message.animate()
-                                                        .scaleY(0)
-                                                        .scaleX(0)
-                                                        .setStartDelay(0)
-                                                        .setDuration(200)
-                                                        .setListener(null)
-                                                        .setInterpolator(new LinearInterpolator())
-                                                        .start(), 2000))
-                                        .setPeriod(1000)
-                                        .start();
-                            }
-                        });
-                        dragAnimator.start();
+                        new NotifierTask.Starter(message,3)
+                                .setCallback(()-> message.post(() ->
+                                        message.animate()
+                                                .scaleY(0)
+                                                .scaleX(0)
+                                                .setStartDelay(0)
+                                                .setDuration(200)
+                                                .setListener(null)
+                                                .setInterpolator(new LinearInterpolator())
+                                                .start()))
+                                .setPeriod(1000)
+                                .setDelay(1000)
+                                .start();
                     }
                 })
                 .start();
