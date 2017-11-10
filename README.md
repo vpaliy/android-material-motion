@@ -1,4 +1,6 @@
 # Reveal Animations
+[![Build Status](https://travis-ci.org/vpaliyX/Reveal-Animations.svg?branch=master)](https://travis-ci.org/vpaliyX/Reveal-Animations)
+
 This repostiroy contains different reveal animations (will add more soon).
 
 If you decide you want to run the app:
