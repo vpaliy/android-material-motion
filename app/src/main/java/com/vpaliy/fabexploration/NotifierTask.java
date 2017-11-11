@@ -26,16 +26,11 @@ public class NotifierTask extends TimerTask {
         if(count < 0) return;
         if(count==0){
             cancel();
+            if(callback!=null){
+                callback.onFinished();
+            }
         }else notifyTarget();
         count--;
-    }
-
-    @Override
-    public boolean cancel() {
-        if(callback!=null){
-            callback.onFinished();
-        }
-        return super.cancel();
     }
 
     private void notifyTarget(){

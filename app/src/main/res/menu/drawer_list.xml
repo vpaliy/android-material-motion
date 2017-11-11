@@ -18,5 +18,8 @@
             app:actionViewClass="android.widget.Switch"
             android:title="@string/enable_message"
             android:id="@+id/enable_message"/>
+        <item
+            android:title="@string/git_item"
+            android:id="@+id/git"/>
     </group>
 </menu>

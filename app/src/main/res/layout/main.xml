@@ -26,8 +26,9 @@
     </RelativeLayout>
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation"
+        app:headerLayout="@layout/header"
         android:paddingTop="@dimen/spacing_big"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:itemTextAppearance="@style/Widget.MainTitle"
