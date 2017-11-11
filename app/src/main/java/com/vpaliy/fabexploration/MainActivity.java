@@ -11,6 +11,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
@@ -45,13 +46,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ButterKnife.bind(this);
+        setupWarning();
         setUpDrawer();
         ViewCompat.setElevation(message,getResources().
                 getDimensionPixelOffset(R.dimen.message_elevation));
         loadFragment(new PlayerFragment());
-        preferences= PreferenceManager.getDefaultSharedPreferences(this);
-        preferences.registerOnSharedPreferenceChangeListener(this);
-        onSharedPreferenceChanged(preferences,WARNING_KEY);
 
     }
 
@@ -70,21 +69,35 @@ public class MainActivity extends AppCompatActivity
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                     loadFragment(new DotsFragment());
                     return true;
-                case R.id.enable_message:
-                    Switch view=(Switch)MenuItemCompat.getActionView(item);
-                    preferences.edit()
-                            .putBoolean(WARNING_KEY,view.isEnabled())
-                            .apply();
-                    return true;
             }
             return false;
+        });
+    }
+
+    private void setupWarning(){
+        preferences= PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.registerOnSharedPreferenceChangeListener(this);
+        onSharedPreferenceChanged(preferences,WARNING_KEY);
+        final MenuItem item=navigation.getMenu().findItem(R.id.enable_message);
+        Switch view=(Switch)MenuItemCompat.getActionView(item);
+        view.setChecked(preferences.getBoolean(WARNING_KEY,false));
+        view.setOnCheckedChangeListener((button,isChecked)->{
+            if(enabledWarning!=isChecked) {
+                preferences.edit()
+                        .putBoolean(WARNING_KEY, isChecked)
+                        .apply();
+            }
         });
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.equals(WARNING_KEY)) {
-            enabledWarning = sharedPreferences.getBoolean(key,enabledWarning);
+            final boolean isChanged=sharedPreferences.getBoolean(key,enabledWarning);
+            if(isChanged!=enabledWarning) {
+                enabledWarning=isChanged;
+                showWarning();
+            }
         }
     }
 
@@ -93,7 +106,14 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
         if(preferences!=null){
             preferences.unregisterOnSharedPreferenceChangeListener(this);
-            preferences=null;
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(preferences!=null){
+            preferences.registerOnSharedPreferenceChangeListener(this);
         }
     }
 
@@ -107,10 +127,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showWarning(){
+        if(notifierTask!=null) {
+            notifierTask.cancel();
+        }
         if(enabledWarning) {
-            if(notifierTask!=null) {
-                notifierTask.cancel();
-            }
             message.setText(R.string.drawer_warning);
             message.setScaleX(0f);
             message.setScaleY(0f);
@@ -138,8 +158,7 @@ public class MainActivity extends AppCompatActivity
                                     .setDelay(1000)
                                     .start();
                         }
-                    })
-                    .start();
+                    }).start();
         }
     }
 }
