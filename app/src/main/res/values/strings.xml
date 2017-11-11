@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Revealing Animations</string>
+    <string name="app_name">Material Motion</string>
     <string name="drawer_warning">Open the left drawer</string>
     <string name="disappear_message">This message will disappear in</string>
     <string name="enable_message">Warning</string>

@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        materialConfig {
+            keyAlias 'key0'
+            keyPassword 'materialmotion'
+            storeFile file("$rootDir/keys.jks")
+            storePassword 'materialmotion'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "26.0.2"
     defaultConfig {
@@ -11,16 +19,16 @@ android {
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    
     buildTypes {
         release {
+            debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.materialConfig
         }
     }
     lintOptions {
@@ -30,12 +38,12 @@ android {
 }
 
 dependencies {
-    implementation ('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
+    implementation('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
         transitive = true
     }
     implementation 'com.github.bumptech.glide:glide:4.3.1'
     implementation 'com.github.ohoussein.playpauseview:playpauseview:1.0.1'
-    implementation "com.andkulikov:transitionseverywhere:1.7.4"
+    implementation 'com.andkulikov:transitionseverywhere:1.7.4'
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.android.support:appcompat-v7:25.4.0'
