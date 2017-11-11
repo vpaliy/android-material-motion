@@ -1,10 +1,11 @@
 # Material Motion
 [![Build Status](https://travis-ci.org/vpaliyX/Reveal-Animations.svg?branch=master)](https://travis-ci.org/vpaliyX/Reveal-Animations)
 
-
 <a href="https://play.google.com/store/apps/details?id=com.vpaliy.fabexploration">
 <img src="https://github.com/vpaliyX/LoginConcept/blob/master/art/get_it.png" />
 </a>
+
+## Or download the APK file ![here](https://github.com/vpaliyX/Material-Motion/releases/download/v1.0/app-release.apk) ##
 
 
 This repostiroy contains different reveal animations (will add more soon).
