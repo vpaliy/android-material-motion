@@ -1,4 +1,4 @@
-# Reveal Animations
+# Material Motion
 [![Build Status](https://travis-ci.org/vpaliyX/Reveal-Animations.svg?branch=master)](https://travis-ci.org/vpaliyX/Reveal-Animations)
 
 This repostiroy contains different reveal animations (will add more soon).
