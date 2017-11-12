@@ -24,6 +24,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.vpaliy.fabexploration.dots.DotsFragment;
 import com.vpaliy.fabexploration.player.PlayerFragment;
+import com.vpaliy.fabexploration.sheets.SheetFragment;
+
 import butterknife.ButterKnife;
 import butterknife.BindView;
 
@@ -78,6 +80,10 @@ public class MainActivity extends AppCompatActivity
                 case R.id.dots:
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                     loadFragment(new DotsFragment());
+                    return true;
+                case R.id.sheets:
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                    loadFragment(new SheetFragment());
                     return true;
                 case R.id.git:
                     final Intent showGitHub=new Intent(Intent.ACTION_VIEW,

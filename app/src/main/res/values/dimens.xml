@@ -26,4 +26,9 @@
     <dimen name="morph_radius">100dp</dimen>
     <dimen name="message_elevation">10dp</dimen>
     <dimen name="panel_height">150dp</dimen>
+
+    <!-- Sheets -->
+    <dimen name="sheet_expanded_height">300dp</dimen>
+    <dimen name="sheet_shrunk_height">150dp</dimen>
+    <dimen name="sheet_elevation">12dp</dimen>
 </resources>

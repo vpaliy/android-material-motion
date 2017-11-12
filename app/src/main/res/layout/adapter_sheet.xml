@@ -1,0 +1,11 @@
+<View
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/sheet_background"
+    android:layout_marginLeft="48dp"
+    android:layout_marginStart="48dp"
+    android:layout_marginEnd="48dp"
+    android:layout_marginRight="48dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/sheet_shrunk_height"/>

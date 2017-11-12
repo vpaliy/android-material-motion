@@ -16,4 +16,5 @@
     <integer name="path_duration">300</integer>
     <integer name="progress_duration">300</integer>
     <integer name="divider_duration">375</integer>
+
 </resources>
