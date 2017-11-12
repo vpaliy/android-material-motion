@@ -7,7 +7,7 @@ import android.support.v4.view.ViewCompat
 import android.util.Log
 import android.view.View
 
-fun View.getHeightAnimator(endHeight:Int, duration:Long=300):ValueAnimator{
+fun View.getHeightAnimator(endHeight:Int, duration:Long=200):ValueAnimator{
     val heightAnimator = ValueAnimator.ofInt(height, endHeight)
     heightAnimator.addUpdateListener {
         val value = it.animatedValue as Int
@@ -18,7 +18,7 @@ fun View.getHeightAnimator(endHeight:Int, duration:Long=300):ValueAnimator{
     return heightAnimator
 }
 
-fun View.getWidthAnimator(endWidth:Int, duration:Long=300):ValueAnimator{
+fun View.getWidthAnimator(endWidth:Int, duration:Long=200):ValueAnimator{
     val widthAnimator = ValueAnimator.ofInt(width, endWidth)
     widthAnimator.addUpdateListener {
         val value = it.animatedValue as Int
