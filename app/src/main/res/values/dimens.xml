@@ -31,4 +31,6 @@
     <dimen name="sheet_expanded_height">300dp</dimen>
     <dimen name="sheet_shrunk_height">150dp</dimen>
     <dimen name="sheet_elevation">12dp</dimen>
+
+    <dimen name="photo_size">150dp</dimen>
 </resources>

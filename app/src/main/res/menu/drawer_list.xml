@@ -14,6 +14,9 @@
         <item
             android:title="@string/sheets_example"
             android:id="@+id/sheets"/>
+        <item
+            android:id="@+id/photo"
+            android:title="@string/photo_example"/>
     </group>
     <group
         android:id="@+id/settings">

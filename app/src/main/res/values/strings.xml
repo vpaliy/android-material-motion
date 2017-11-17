@@ -6,6 +6,7 @@
     <string name="player_example">Player</string>
     <string name="dots_example">Dots</string>
     <string name="sheets_example">Sheets</string>
+    <string name="photo_example">PhotoCard</string>
     <string name="track_author" translatable="false">Kodaline</string>
     <string name="track_title" translatable="false">In a Perfect World</string>
     <string name="git_item" translatable="false">GitHub</string>
