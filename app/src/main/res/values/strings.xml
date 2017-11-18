@@ -10,5 +10,12 @@
     <string name="track_author" translatable="false">Kodaline</string>
     <string name="track_title" translatable="false">In a Perfect World</string>
     <string name="git_item" translatable="false">GitHub</string>
+    <string name="share_example">Share</string>
     <string name="GitHub" translatable="false">https://www.github.com/vpaliyX</string>
+
+    <string name="gitHub" translatable="false">GitHub</string>
+    <string name="twitter" translatable="false">Twitter</string>
+    <string name="google" translatable="false">Google</string>
+    <string name="facebook" translatable="false">Facebook</string>
+    <string name="linkedin" translatable="false">LinkedIn</string>
 </resources>

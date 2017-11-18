@@ -33,4 +33,5 @@
     <dimen name="sheet_elevation">12dp</dimen>
 
     <dimen name="photo_size">150dp</dimen>
+    <dimen name="share_icon_size">64dp</dimen>
 </resources>

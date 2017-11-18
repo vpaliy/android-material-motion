@@ -17,6 +17,9 @@
         <item
             android:id="@+id/photo"
             android:title="@string/photo_example"/>
+        <item
+            android:id="@+id/share"
+            android:title="@string/share_example"/>
     </group>
     <group
         android:id="@+id/settings">

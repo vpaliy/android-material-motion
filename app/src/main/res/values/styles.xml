@@ -21,6 +21,14 @@
         <item name="android:drawablePadding">@dimen/drawable_padding</item>
     </style>
 
+    <style name="Widget.ShareText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:scaleX">0</item>
+        <item name="android:scaleY">0</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawablePadding">@dimen/drawable_padding</item>
+    </style>
+
     <style name="Widget.MainTitle">
         <item name="android:textSize">@dimen/main_title_size</item>
         <item name="android:ellipsize">end</item>

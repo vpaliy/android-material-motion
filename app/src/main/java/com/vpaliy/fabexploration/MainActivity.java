@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.vpaliy.fabexploration.dots.DotsFragment;
 import com.vpaliy.fabexploration.photo.PhotoFragment;
 import com.vpaliy.fabexploration.player.PlayerFragment;
+import com.vpaliy.fabexploration.share.ShareFragment;
 import com.vpaliy.fabexploration.sheets.SheetFragment;
 
 import butterknife.ButterKnife;
@@ -90,6 +91,8 @@ public class MainActivity extends AppCompatActivity
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                     loadFragment(new PhotoFragment());
                     return true;
+                case R.id.share:
+                    loadFragment(new ShareFragment());
                 case R.id.git:
                     final Intent showGitHub=new Intent(Intent.ACTION_VIEW,
                             Uri.parse(getString(R.string.GitHub)));
