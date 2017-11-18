@@ -61,6 +61,10 @@ fun Any.log(message:Any,tag:String=this.javaClass.name){
 
 fun View.click(function:()->Unit)=setOnClickListener { function() }
 
+fun View.halfWidth()=width/2f
+
+fun View.halfHeight()=height/2f
+
 infix fun <T> Boolean.then(value:T)=if(this) value else null
 
 infix fun Context.getDimens(id:Int)=resources.getDimensionPixelOffset(id)

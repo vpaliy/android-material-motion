@@ -1,6 +1,8 @@
 package com.vpaliy.fabexploration;
 
+import android.animation.ValueAnimator;
 import android.graphics.Path;
+import android.graphics.PathMeasure;
 import android.os.Bundle;
 import android.support.annotation.IntegerRes;
 import android.support.annotation.LayoutRes;
@@ -59,6 +61,29 @@ public abstract class BaseFragment extends Fragment {
 
     protected int duration(@IntegerRes int resource){
         return getResources().getInteger(resource);
+    }
+
+    protected class ArcListener implements ValueAnimator.AnimatorUpdateListener{
+
+        private float point[]=new float[2];
+        private PathMeasure pathMeasure;
+        private View target;
+
+        public ArcListener(Path path, View target){
+            this.pathMeasure = new PathMeasure(path, false);
+            this.target=target;
+        }
+
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            final float value=animation.getAnimatedFraction();
+            // Gets the point at the fractional path length
+            pathMeasure.getPosTan(pathMeasure.getLength() * value, point, null);
+
+            // Sets view location to the above point
+            target.setTranslationX(point[0]);
+            target.setTranslationY(point[1]);
+        }
     }
 
 }

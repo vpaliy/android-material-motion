@@ -6,7 +6,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.Path;
-import android.graphics.PathMeasure;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -291,29 +290,6 @@ public class DotsFragment extends BaseFragment {
         }
         buttonSet.setDuration(duration);
         set.playTogether(buttonSet);
-    }
-
-    private class ArcListener implements ValueAnimator.AnimatorUpdateListener{
-
-        private float point[]=new float[2];
-        private PathMeasure pathMeasure;
-        private View dot;
-
-        public ArcListener(Path path, View dot){
-            this.pathMeasure = new PathMeasure(path, false);
-            this.dot=dot;
-        }
-
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            final float value=animation.getAnimatedFraction();
-            // Gets the point at the fractional path length
-            pathMeasure.getPosTan(pathMeasure.getLength() * value, point, null);
-
-            // Sets view location to the above point
-            dot.setTranslationX(point[0]);
-            dot.setTranslationY(point[1]);
-        }
     }
 
     private AnimatorSet morphParent(int duration){

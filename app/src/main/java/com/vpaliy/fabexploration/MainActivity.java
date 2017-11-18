@@ -27,7 +27,6 @@ import com.vpaliy.fabexploration.photo.PhotoFragment;
 import com.vpaliy.fabexploration.player.PlayerFragment;
 import com.vpaliy.fabexploration.share.ShareFragment;
 import com.vpaliy.fabexploration.sheets.SheetFragment;
-
 import butterknife.ButterKnife;
 import butterknife.BindView;
 
@@ -93,6 +92,7 @@ public class MainActivity extends AppCompatActivity
                     return true;
                 case R.id.share:
                     loadFragment(new ShareFragment());
+                    return true;
                 case R.id.git:
                     final Intent showGitHub=new Intent(Intent.ACTION_VIEW,
                             Uri.parse(getString(R.string.GitHub)));
