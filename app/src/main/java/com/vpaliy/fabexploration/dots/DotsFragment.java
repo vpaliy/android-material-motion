@@ -272,7 +272,7 @@ public class DotsFragment extends BaseFragment {
 
     private void addScaleAnimation(int startDelay, int duration, AnimatorSet set){
         final int start=!isFolded?1:0;
-        final int end =~start&0x1;
+        final int end =~start & 0x1;
         AnimatorSet buttonSet=new AnimatorSet();
         for(int index=0;index<dots.size();index++){
             FloatingActionButton tempDot=dots.get(index);

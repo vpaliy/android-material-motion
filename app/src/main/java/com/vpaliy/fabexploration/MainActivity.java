@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity
                     loadFragment(new PhotoFragment());
                     return true;
                 case R.id.share:
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                     loadFragment(new ShareFragment());
                     return true;
                 case R.id.git:

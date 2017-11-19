@@ -2,9 +2,11 @@ package com.vpaliy.fabexploration.share
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AccelerateInterpolator
 import com.vpaliy.fabexploration.*
 import com.vpaliy.kotlin_extensions.animator
 import com.vpaliy.kotlin_extensions.hide
@@ -15,7 +17,6 @@ import kotlinx.android.synthetic.main.fragment_share.*
 
 
 class ShareFragment: BaseFragment(){
-    private var isRevealed=false
     private val items by lazy(LazyThreadSafetyMode.NONE){
         mutableListOf(git,facebook,linkedIn,twitter)
     }
@@ -28,6 +29,7 @@ class ShareFragment: BaseFragment(){
             val deltaX=root.halfWidth() - share.x - share.halfWidth()
             val deltaY=root.halfHeight() - share.y - share.halfHeight()
             val path=createArcPath(share,deltaX,deltaY,-deltaX)
+            val alphaAnimator=ObjectAnimator.ofInt(share.drawable,"alpha",1,0)
             ValueAnimator.ofFloat(0f,1f).apply {
                 addUpdateListener(ArcListener(path,share))
                 addListener(object:AnimatorListenerAdapter(){
@@ -36,19 +38,22 @@ class ShareFragment: BaseFragment(){
                         reveal()
                     }
                 })
-            }.start()
+            }.playWith(alphaAnimator).start()
         }
+
+        background.click { conceal() }
     }
 
     private fun reveal(){
         val cx = share.x+share.halfWidth()
         val cy = share.y+share.halfHeight()
         val endRadius =Math.hypot(root.width.toDouble(), root.height.toDouble()).toFloat()
-        val startRadius = share.halfHeight()
+        val startRadius = share.height.toFloat()
         share.hide(false)
         background.show()
         ViewAnimationUtils.createCircularReveal(background, cx.toInt(), cy.toInt(), startRadius, endRadius).apply {
-            duration=300
+            duration=500
+            interpolator=AccelerateInterpolator()
             addListener(object:AnimatorListenerAdapter(){
                 override fun onAnimationEnd(animation: Animator?) {
                     super.onAnimationEnd(animation)
@@ -59,9 +64,46 @@ class ShareFragment: BaseFragment(){
                             startDelay=index * 50L
                         }.start()
                     }
-                    isRevealed=!isRevealed
                 }
             })
         }.start()
+    }
+
+    private fun conceal(){
+        val cx = share.x+share.halfWidth()
+        val cy = share.y+share.halfHeight()
+        val startRadius =Math.hypot(root.width.toDouble(), root.height.toDouble()).toFloat()
+        val endRadius = share.height.toFloat()
+        ViewAnimationUtils.createCircularReveal(background, cx.toInt(), cy.toInt(), startRadius, endRadius).apply {
+            duration=500
+            interpolator=AccelerateInterpolator()
+            addListener(object:AnimatorListenerAdapter(){
+                override fun onAnimationStart(animation: Animator?) {
+                    items.forEachIndexed{index,item->
+                        item.animator {
+                            scale(0f)
+                            duration=300L
+                            startDelay=index * 50L
+                        }.start()
+                    }
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    background.hide(false)
+                    share.show()
+                    adjustButton()
+                }
+            })
+        }.start()
+    }
+
+    private fun adjustButton(){
+        val path=createArcPath(share,0f,0f,share.translationX)
+        val alphaAnimator=ObjectAnimator.ofInt(share.drawable,"alpha",0,1)
+        ValueAnimator.ofFloat(0f,1f).apply {
+            startDelay=300L
+            addUpdateListener(ArcListener(path, share))
+        }.playWith(alphaAnimator).start()
     }
 }
