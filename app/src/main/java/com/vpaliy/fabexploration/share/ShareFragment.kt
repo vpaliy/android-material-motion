@@ -1,7 +1,5 @@
 package com.vpaliy.fabexploration.share
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.os.Bundle
@@ -14,7 +12,6 @@ import com.vpaliy.kotlin_extensions.scale
 import com.vpaliy.kotlin_extensions.show
 import io.codetail.animation.ViewAnimationUtils
 import kotlinx.android.synthetic.main.fragment_share.*
-
 
 class ShareFragment: BaseFragment(){
     private val items by lazy(LazyThreadSafetyMode.NONE){
@@ -32,12 +29,7 @@ class ShareFragment: BaseFragment(){
             val alphaAnimator=ObjectAnimator.ofInt(share.drawable,"alpha",1,0)
             ValueAnimator.ofFloat(0f,1f).apply {
                 addUpdateListener(ArcListener(path,share))
-                addListener(object:AnimatorListenerAdapter(){
-                    override fun onAnimationEnd(animation: Animator?) {
-                        super.onAnimationEnd(animation)
-                        reveal()
-                    }
-                })
+                onEnd{ reveal() }
             }.playWith(alphaAnimator).start()
         }
 
@@ -54,18 +46,15 @@ class ShareFragment: BaseFragment(){
         ViewAnimationUtils.createCircularReveal(background, cx.toInt(), cy.toInt(), startRadius, endRadius).apply {
             duration=500
             interpolator=AccelerateInterpolator()
-            addListener(object:AnimatorListenerAdapter(){
-                override fun onAnimationEnd(animation: Animator?) {
-                    super.onAnimationEnd(animation)
-                    items.forEachIndexed{index,item->
-                        item.animator {
-                            scale(1f)
-                            duration=300L
-                            startDelay=index * 50L
-                        }.start()
-                    }
+            onEnd {
+                items.forEachIndexed{index,item->
+                    item.animator {
+                        scale(1f)
+                        duration=300L
+                        startDelay=index * 50L
+                    }.start()
                 }
-            })
+            }
         }.start()
     }
 
@@ -77,24 +66,20 @@ class ShareFragment: BaseFragment(){
         ViewAnimationUtils.createCircularReveal(background, cx.toInt(), cy.toInt(), startRadius, endRadius).apply {
             duration=500
             interpolator=AccelerateInterpolator()
-            addListener(object:AnimatorListenerAdapter(){
-                override fun onAnimationStart(animation: Animator?) {
-                    items.forEachIndexed{index,item->
-                        item.animator {
-                            scale(0f)
-                            duration=300L
-                            startDelay=index * 50L
-                        }.start()
-                    }
+            onStart {
+                items.forEachIndexed{index,item->
+                    item.animator {
+                        scale(0f)
+                        duration=300L
+                        startDelay=index * 50L
+                    }.start()
                 }
-
-                override fun onAnimationEnd(animation: Animator?) {
-                    super.onAnimationEnd(animation)
+                onEnd {
                     background.hide(false)
                     share.show()
                     adjustButton()
                 }
-            })
+            }
         }.start()
     }
 
