@@ -6,13 +6,20 @@ import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
 import com.vpaliy.fabexploration.*
+import com.vpaliy.kotlin_extensions.animator
 import com.vpaliy.kotlin_extensions.hide
+import com.vpaliy.kotlin_extensions.scale
 import com.vpaliy.kotlin_extensions.show
 import io.codetail.animation.ViewAnimationUtils
 import kotlinx.android.synthetic.main.fragment_share.*
 
 
 class ShareFragment: BaseFragment(){
+    private var isRevealed=false
+    private val items by lazy(LazyThreadSafetyMode.NONE){
+        mutableListOf(git,facebook,linkedIn,twitter)
+    }
+
     override fun mainRes()= R.layout.fragment_share
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -26,7 +33,6 @@ class ShareFragment: BaseFragment(){
                 addListener(object:AnimatorListenerAdapter(){
                     override fun onAnimationEnd(animation: Animator?) {
                         super.onAnimationEnd(animation)
-                        //reveal animator goes here
                         reveal()
                     }
                 })
@@ -43,6 +49,19 @@ class ShareFragment: BaseFragment(){
         background.show()
         ViewAnimationUtils.createCircularReveal(background, cx.toInt(), cy.toInt(), startRadius, endRadius).apply {
             duration=300
+            addListener(object:AnimatorListenerAdapter(){
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    items.forEachIndexed{index,item->
+                        item.animator {
+                            scale(1f)
+                            duration=300L
+                            startDelay=index * 50L
+                        }.start()
+                    }
+                    isRevealed=!isRevealed
+                }
+            })
         }.start()
     }
 }

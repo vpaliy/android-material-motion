@@ -7,6 +7,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <io.codetail.widget.RevealFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <View
+            android:id="@+id/background"
+            android:visibility="gone"
+            android:background="@color/colorAccent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </io.codetail.widget.RevealFrameLayout>
+
     <TextView
         android:id="@+id/git"
         tools:scaleX="1"
@@ -63,17 +74,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linkedIn" />
-
-   <io.codetail.widget.RevealFrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <View
-            android:id="@+id/background"
-            android:visibility="invisible"
-            android:background="@color/colorAccent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </io.codetail.widget.RevealFrameLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/share"

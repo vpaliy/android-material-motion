@@ -17,4 +17,6 @@
     <color name="color_dot_first">#03a9f4</color>
     <color name="color_dot_second">#ffc107</color>
     <color name="color_blank">#c4c4c4</color>
+
+    <color name="share_color">#fafafa</color>
 </resources>
