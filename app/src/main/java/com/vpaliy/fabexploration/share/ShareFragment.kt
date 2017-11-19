@@ -63,23 +63,21 @@ class ShareFragment: BaseFragment(){
         val cy = share.y+share.halfHeight()
         val startRadius =Math.hypot(root.width.toDouble(), root.height.toDouble()).toFloat()
         val endRadius = share.height.toFloat()
-        ViewAnimationUtils.createCircularReveal(background, cx.toInt(), cy.toInt(), startRadius, endRadius).apply {
+        ViewAnimationUtils.createCircularReveal(background, cx.toInt(), cy.toInt(), startRadius, endRadius).onStart {
+            items.forEachIndexed { index, item ->
+                item.animator {
+                    scale(0f)
+                    duration = 300L
+                    startDelay = index * 50L
+                }.start()
+            }
+        }.onEnd {
+            background.hide(false)
+            share.show()
+            adjustButton()
+        }.animator().apply {
             duration=500
             interpolator=AccelerateInterpolator()
-            onStart {
-                items.forEachIndexed{index,item->
-                    item.animator {
-                        scale(0f)
-                        duration=300L
-                        startDelay=index * 50L
-                    }.start()
-                }
-                onEnd {
-                    background.hide(false)
-                    share.show()
-                    adjustButton()
-                }
-            }
         }.start()
     }
 
