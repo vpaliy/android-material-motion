@@ -17,8 +17,13 @@ If you decide you want to run the app:
 # Dots #
 ![](https://github.com/vpaliyX/FabExploration/blob/master/art/dot.gif)
 
+
 # Player #
 ![](https://github.com/vpaliyX/FabExploration/blob/master/art/player.gif)
+
+
+# Sheets #
+![](https://github.com/vpaliyX/FabExploration/blob/master/art/sheets.gif)
 
 
 ## License ##
