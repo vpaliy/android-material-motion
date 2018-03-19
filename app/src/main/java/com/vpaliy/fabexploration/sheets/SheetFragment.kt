@@ -8,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.vpaliy.fabexploration.R
 
-class SheetFragment:Fragment(){
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):View?{
-        val root=inflater.inflate(R.layout.fragment_sheets,container,false) as RecyclerView
-        root.adapter=SheetAdapter(context)
-        return root
-    }
+class SheetFragment : Fragment() {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    val root = inflater.inflate(R.layout.fragment_sheets, container, false) as RecyclerView
+    root.adapter = SheetAdapter(context)
+    return root
+  }
 }

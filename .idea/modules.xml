@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FabExploration.iml" filepath="$PROJECT_DIR$/FabExploration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Material-Motion.iml" filepath="$PROJECT_DIR$/Material-Motion.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

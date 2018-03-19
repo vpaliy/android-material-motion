@@ -11,17 +11,17 @@ public class SeparatorView extends View {
 
     private Paint linePaint;
 
-    public SeparatorView(Context context){
+    public SeparatorView(Context context) {
         super(context);
         init();
     }
 
-    public SeparatorView(Context context, AttributeSet attrs){
-        super(context,attrs);
+    public SeparatorView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         init();
     }
 
-    private void init(){
+    private void init() {
         linePaint = new Paint();
         linePaint.setAlpha(50);
         linePaint.setColor(Color.BLACK);
@@ -31,6 +31,6 @@ public class SeparatorView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawLine(getWidth()/10,0,getWidth()/10,getHeight(),linePaint);
+        canvas.drawLine(getWidth() / 10, 0, getWidth() / 10, getHeight(), linePaint);
     }
 }

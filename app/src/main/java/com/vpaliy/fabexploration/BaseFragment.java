@@ -22,7 +22,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(unbinder!=null){
+        if (unbinder != null) {
             unbinder.unbind();
         }
     }
@@ -30,19 +30,19 @@ public abstract class BaseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root=inflater.inflate(mainRes(),container,false);
+        View root = inflater.inflate(mainRes(), container, false);
         setRetainInstance(true);
-        unbinder= ButterKnife.bind(this,root);
+        unbinder = ButterKnife.bind(this, root);
         return root;
     }
 
     @LayoutRes
     protected abstract int mainRes();
 
-    protected Path createArcPath(View view, float endX, float endY, float radius){
-        Path arcPath=new Path();
-        float startX=view.getTranslationX();
-        float startY=view.getTranslationY();
+    protected Path createArcPath(View view, float endX, float endY, float radius) {
+        Path arcPath = new Path();
+        float startX = view.getTranslationX();
+        float startY = view.getTranslationY();
         float midX = startX + ((endX - startX) / 2);
         float midY = startY + ((endY - startY) / 2);
         float xDiff = midX - startX;
@@ -55,28 +55,28 @@ public abstract class BaseFragment extends Fragment {
         float pointY = (float) (midY + radius * Math.sin(angleRadians));
 
         arcPath.moveTo(startX, startY);
-        arcPath.cubicTo(startX,startY,pointX,pointY, endX, endY);
+        arcPath.cubicTo(startX, startY, pointX, pointY, endX, endY);
         return arcPath;
     }
 
-    protected int duration(@IntegerRes int resource){
+    protected int duration(@IntegerRes int resource) {
         return getResources().getInteger(resource);
     }
 
-    protected class ArcListener implements ValueAnimator.AnimatorUpdateListener{
+    protected class ArcListener implements ValueAnimator.AnimatorUpdateListener {
 
-        private float point[]=new float[2];
+        private float point[] = new float[2];
         private PathMeasure pathMeasure;
         private View target;
 
-        public ArcListener(Path path, View target){
+        public ArcListener(Path path, View target) {
             this.pathMeasure = new PathMeasure(path, false);
-            this.target=target;
+            this.target = target;
         }
 
         @Override
         public void onAnimationUpdate(ValueAnimator animation) {
-            final float value=animation.getAnimatedFraction();
+            final float value = animation.getAnimatedFraction();
             // Gets the point at the fractional path length
             pathMeasure.getPosTan(pathMeasure.getLength() * value, point, null);
 
