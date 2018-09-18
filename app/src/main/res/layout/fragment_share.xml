@@ -1,79 +1,80 @@
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="false"
     android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
 
     <io.codetail.widget.RevealFrameLayout
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <View
             android:id="@+id/background"
-            android:visibility="gone"
-            android:background="@color/colorAccent"
+            android:background="@drawable/rounded"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:visibility="gone" />
     </io.codetail.widget.RevealFrameLayout>
 
     <TextView
         android:id="@+id/git"
-        tools:scaleX="1"
-        tools:scaleY="1"
+        style="@style/Widget.ShareText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableTop="@drawable/github"
         android:text="@string/gitHub"
-        style="@style/Widget.ShareText"
+        app:layout_constraintBottom_toTopOf="@+id/facebook"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/facebook"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:scaleX="1"
+        tools:scaleY="1" />
 
     <TextView
         android:id="@+id/facebook"
-        tools:scaleX="1"
-        tools:scaleY="1"
-        android:text="@string/facebook"
         style="@style/Widget.ShareText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableTop="@drawable/ic_facebook"
+        android:text="@string/facebook"
+        app:layout_constraintBottom_toTopOf="@+id/linkedIn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/linkedIn"
-        app:layout_constraintTop_toBottomOf="@+id/git" />
+        app:layout_constraintTop_toBottomOf="@+id/git"
+        tools:scaleX="1"
+        tools:scaleY="1" />
 
     <TextView
         android:id="@+id/linkedIn"
-        tools:scaleX="1"
-        tools:scaleY="1"
-        android:text="@string/linkedin"
         style="@style/Widget.ShareText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableTop="@drawable/ic_linkedin"
+        android:text="@string/linkedin"
+        app:layout_constraintBottom_toTopOf="@+id/twitter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/twitter"
-        app:layout_constraintTop_toBottomOf="@+id/facebook" />
+        app:layout_constraintTop_toBottomOf="@+id/facebook"
+        tools:scaleX="1"
+        tools:scaleY="1" />
 
     <TextView
         android:id="@+id/twitter"
-        tools:scaleX="1"
-        tools:scaleY="1"
-        android:text="@string/twitter"
         style="@style/Widget.ShareText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:drawableTop="@drawable/ic_twitter"
+        android:text="@string/twitter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linkedIn" />
+        app:layout_constraintTop_toBottomOf="@+id/linkedIn"
+        tools:scaleX="1"
+        tools:scaleY="1" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/share"
@@ -83,7 +84,8 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         app:fabSize="normal"
-        app:srcCompat="@drawable/ic_share"
+        app:backgroundTint="#000"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_share" />
 </android.support.constraint.ConstraintLayout>

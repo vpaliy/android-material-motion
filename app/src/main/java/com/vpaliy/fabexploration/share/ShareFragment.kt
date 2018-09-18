@@ -1,10 +1,10 @@
 package com.vpaliy.fabexploration.share
 
-import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import com.vpaliy.fabexploration.*
 import com.vpaliy.kotlin_extensions.animator
 import com.vpaliy.kotlin_extensions.hide
@@ -26,11 +26,10 @@ class ShareFragment : BaseFragment() {
       val deltaX = root.halfWidth() - share.x - share.halfWidth()
       val deltaY = root.halfHeight() - share.y - share.halfHeight()
       val path = createArcPath(share, deltaX, deltaY, -deltaX)
-      val alphaAnimator = ObjectAnimator.ofInt(share.drawable, "alpha", 1, 0)
       ValueAnimator.ofFloat(0f, 1f).apply {
         addUpdateListener(ArcListener(path, share))
         onEnd { reveal() }
-      }.playWith(alphaAnimator).start()
+      }.start()
     }
 
     background.click { conceal() }
@@ -44,14 +43,14 @@ class ShareFragment : BaseFragment() {
     share.hide(false)
     background.show()
     ViewAnimationUtils.createCircularReveal(background, cx.toInt(), cy.toInt(), startRadius, endRadius).apply {
-      duration = 500
-      interpolator = AccelerateInterpolator()
-      onEnd {
+      duration = 850
+      interpolator = DecelerateInterpolator()
+      onStart {
         items.forEachIndexed { index, item ->
           item.animator {
             scale(1f)
-            duration = 300L
-            startDelay = index * 50L
+            duration = 150L
+            startDelay = maxOf(index, 1) * 90L
           }.start()
         }
       }
@@ -83,10 +82,9 @@ class ShareFragment : BaseFragment() {
 
   private fun adjustButton() {
     val path = createArcPath(share, 0f, 0f, share.translationX)
-    val alphaAnimator = ObjectAnimator.ofInt(share.drawable, "alpha", 0, 1)
     ValueAnimator.ofFloat(0f, 1f).apply {
       startDelay = 300L
       addUpdateListener(ArcListener(path, share))
-    }.playWith(alphaAnimator).start()
+    }.start()
   }
 }
