@@ -15,15 +15,15 @@ If you decide you want to run the app:
 - use the left drawer in order to navigate through the animations. (just swipe left)
 
 # Dots #
-![](https://github.com/vpaliy/FabExploration/blob/master/art/dot.gif)
+![](https://github.com/vpaliyX/FabExploration/blob/master/art/dot.gif)
 
 
 # Player #
-![](https://github.com/vpaliy/FabExploration/blob/master/art/player.gif)
+![](https://github.com/vpaliyX/FabExploration/blob/master/art/player.gif)
 
 
 # Sheets #
-![](https://github.com/vpaliy/FabExploration/blob/master/art/sheets.gif)
+![](https://github.com/vpaliyX/FabExploration/blob/master/art/sheets.gif)
 
 
 ## License ##
