@@ -1,11 +1,11 @@
 # Material Motion
-[![Build Status](https://travis-ci.org/vpaliyX/Reveal-Animations.svg?branch=master)](https://travis-ci.org/vpaliyX/Reveal-Animations)
+[![Build Status](https://travis-ci.org/vpaliyX/Reveal-Animations.svg?branch=master)](https://travis-ci.org/vpaliy/Reveal-Animations)
 
 <a href="https://play.google.com/store/apps/details?id=com.vpaliy.fabexploration">
 <img src="https://github.com/vpaliyX/LoginConcept/blob/master/art/get_it.png" />
 </a>
 
-## Or download the APK file [here](https://github.com/vpaliyX/Material-Motion/releases/download/v1.0/app-release.apk) ##
+## Or download the APK file [here](https://github.com/vpaliy/Material-Motion/releases/download/v1.0/app-release.apk) ##
 
 
 This repostiroy contains different reveal animations (will add more soon).
@@ -15,15 +15,15 @@ If you decide you want to run the app:
 - use the left drawer in order to navigate through the animations. (just swipe left)
 
 # Dots #
-![](https://github.com/vpaliyX/FabExploration/blob/master/art/dot.gif)
+![](https://github.com/vpaliy/FabExploration/blob/master/art/dot.gif)
 
 
 # Player #
-![](https://github.com/vpaliyX/FabExploration/blob/master/art/player.gif)
+![](https://github.com/vpaliy/FabExploration/blob/master/art/player.gif)
 
 
 # Sheets #
-![](https://github.com/vpaliyX/FabExploration/blob/master/art/sheets.gif)
+![](https://github.com/vpaliy/FabExploration/blob/master/art/sheets.gif)
 
 
 ## License ##
